@@ -118,7 +118,7 @@ const Intro = () => {
 
                 <div className="scene-2">
                     <div className="name-line-1 typing-container">The Elengetable</div>
-                    <div className="name-line-2 typing-container">Manju Sri</div>
+                    <div className="name-line-2 typing-container">Devi...</div>
                 </div>
 
                 <div className="scene-3">

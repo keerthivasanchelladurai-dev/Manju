@@ -108,6 +108,11 @@ const Last = () => {
                 </div>
 
                 <div className="signature">- Yours always ❤️</div>
+                
+                <div className="close-section">
+                    <p className="close-text">If you have completed reading, you can leave. The page will close automatically.</p>
+                    <button className="close-btn" onClick={() => window.close()}>Close Page</button>
+                </div>
             </div>
         </div>
     );

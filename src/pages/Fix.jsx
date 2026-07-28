@@ -114,7 +114,7 @@ const Fix = () => {
 
   const handleLeave = () => {
     setChoiceVisible(false);
-    setTimeout(() => setLeaveMsgVisible(true), 500);
+    setTimeout(() => navigate('/last'), 500);
   };
 
   const startPhase2 = () => {

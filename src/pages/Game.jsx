@@ -37,6 +37,7 @@ const Game = () => {
         aimAngle: 0,
         power: 0,
         audioContext: null,
+        micStream: null,
         isCandleLit: true
     });
 
@@ -254,6 +255,12 @@ const Game = () => {
             
             // Clean up any remaining arrows
             document.querySelectorAll('.arrow').forEach(a => a.remove());
+            if (dragState.current.micStream) {
+                dragState.current.micStream.getTracks().forEach(track => track.stop());
+            }
+            if (dragState.current.audioContext && dragState.current.audioContext.state !== 'closed') {
+                dragState.current.audioContext.close().catch(() => {});
+            }
         };
     }, []);
 
@@ -470,6 +477,7 @@ const Game = () => {
         if (dragState.current.audioContext) return;
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            dragState.current.micStream = stream;
             dragState.current.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const analyser = dragState.current.audioContext.createAnalyser();
             const microphone = dragState.current.audioContext.createMediaStreamSource(stream);
@@ -492,6 +500,14 @@ const Game = () => {
 
                 if (average > 35) {
                     dragState.current.isCandleLit = false;
+                    
+                    if (dragState.current.micStream) {
+                        dragState.current.micStream.getTracks().forEach(track => track.stop());
+                    }
+                    if (dragState.current.audioContext && dragState.current.audioContext.state !== 'closed') {
+                        dragState.current.audioContext.close().catch(() => {});
+                    }
+
                     setBtnText("Yay! \uD83D\uDC4F");
                     setBtnStyle({ background: '#2d8a4e' });
                     

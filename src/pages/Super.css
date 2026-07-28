@@ -32,34 +32,34 @@
   position: absolute;
   background: #ffffff;
   border-radius: 20px;
-  padding: 15px 12px;
-  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.4);
-  animation: floatUpFade 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  padding: 20px 15px;
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.5);
+  animation: floatUpFade 4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 160px;
+  gap: 12px;
+  width: 220px;
   text-align: center;
   z-index: 50;
 }
 
 .super-body .pop-card-header {
-  color: #5b21b6;
-  font-family: 'Playfair Display', serif, sans-serif;
+  color: #333;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 11px;
-  line-height: 1.2;
+  font-size: 14px;
+  line-height: 1.3;
   letter-spacing: 0.5px;
 }
 
 .super-body .pop-card-inner {
-  border: 3px solid #a855f7;
+  border: 4px solid #a855f7;
   border-radius: 12px;
-  padding: 4px;
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+  padding: 5px;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
   width: 100%;
   box-sizing: border-box;
   background: white;
@@ -67,7 +67,7 @@
 
 .super-body .pop-card-inner .image-placeholder {
   width: 100%;
-  height: 90px;
+  height: 120px;
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -76,17 +76,18 @@
 }
 
 .super-body .pop-card-footer {
-  font-family: 'Caveat', 'Great Vibes', 'Playfair Display', cursive, serif;
-  font-style: italic;
-  font-size: 15px;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
+  font-size: 16px;
   font-weight: 600;
+  color: #444;
   text-transform: none;
 }
 
 @keyframes floatUpFade {
-  0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
-  20% { transform: translate(-50%, -100px) scale(1.2); opacity: 1; }
-  70% { transform: translate(-50%, -150px) scale(1.2); opacity: 1; }
+  0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+  10% { transform: translate(-50%, -50px) scale(1.1); opacity: 1; }
+  20% { transform: translate(-50%, -70px) scale(1); opacity: 1; }
+  80% { transform: translate(-50%, -150px) scale(1); opacity: 1; }
   100% { transform: translate(-50%, -250px) scale(1); opacity: 0; }
 }
 
@@ -106,14 +107,18 @@
 
 @media (max-width: 768px) {
   .super-body #mario-ui { font-size: 14px; padding: 15px; }
-  .super-body .pop-card { font-size: 10px; padding: 10px; width: 100px; }
-  .super-body .pop-card .image-placeholder { height: 70px; font-size: 0.6rem; }
+  .super-body .pop-card { padding: 15px; width: 160px; }
+  .super-body .pop-card .image-placeholder { height: 100px; }
+  .super-body .pop-card-header { font-size: 12px; }
+  .super-body .pop-card-footer { font-size: 14px; }
 }
 
 @media (max-height: 500px) {
   .super-body #mario-ui { font-size: 12px; padding: 10px 15px; }
-  .super-body .pop-card { font-size: 9px; padding: 8px; width: 90px; }
-  .super-body .pop-card .image-placeholder { height: 60px; }
+  .super-body .pop-card { padding: 12px; width: 140px; }
+  .super-body .pop-card .image-placeholder { height: 90px; }
+  .super-body .pop-card-header { font-size: 11px; }
+  .super-body .pop-card-footer { font-size: 13px; }
   .super-body #controls { bottom: 10px; }
   .super-body .btn { width: 50px; height: 50px; font-size: 16px; }
   .super-body #winMessage { font-size: 28px; }

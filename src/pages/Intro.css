@@ -90,10 +90,10 @@
   justify-content: center;
   text-align: center;
   color: var(--dark-bubble);
-  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-family: 'Great Vibes', 'Caveat', 'Playfair Display', cursive, serif;
   opacity: 0;
   animation: fadeInOutScene2 3.5s 4.5s forwards;
-  text-shadow: 0 0 4px rgba(6, 28, 24, 0.15);
+  text-shadow: 0 0 8px rgba(6, 28, 24, 0.3);
 }
 
 @keyframes fadeInOutScene2 {
@@ -119,10 +119,10 @@
 }
 
 .name-line-1 {
-  font-size: 18px;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  word-spacing: -2px;
+  font-size: 42px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  word-spacing: 2px;
 }
 
 .name-line-1.typing-container {
@@ -131,9 +131,9 @@
 }
 
 .name-line-2 {
-  font-size: 38px;
-  letter-spacing: -2px;
-  word-spacing: -4px;
+  font-size: 64px;
+  letter-spacing: 1px;
+  word-spacing: 2px;
   line-height: 1.3;
 }
 
@@ -150,10 +150,10 @@
   justify-content: center;
   width: 100%;
   color: var(--dark-bubble);
-  font-family: 'Press Start 2P', 'Courier New', monospace;
+  font-family: 'Great Vibes', 'Caveat', 'Playfair Display', cursive, serif;
   opacity: 0;
   animation: fadeInScene3 0.8s 8s forwards;
-  text-shadow: 0 0 4px rgba(6, 28, 24, 0.15);
+  text-shadow: 0 0 8px rgba(6, 28, 24, 0.3);
 }
 
 @keyframes fadeInScene3 {
@@ -164,8 +164,8 @@
 .pattuma-word {
   display: flex;
   align-items: flex-end;
-  font-size: 84px;
-  letter-spacing: 2px;
+  font-size: 110px;
+  letter-spacing: 4px;
   line-height: 1;
 }
 
@@ -283,9 +283,9 @@
   .message-bubble { padding: 25px 30px 15px 30px; border-radius: 30px; }
   .icon-piano { width: 34px; height: 24px; }
   .icon-heart { width: 45px; height: 35px; }
-  .name-line-1 { font-size: 10px; margin-bottom: 8px; }
-  .name-line-2 { font-size: 18px; }
-  .pattuma-word { font-size: 11vw; }
+  .name-line-1 { font-size: 28px; margin-bottom: 12px; }
+  .name-line-2 { font-size: 48px; }
+  .pattuma-word { font-size: 16vw; }
 }
 
 @media (max-height: 500px) {
@@ -296,7 +296,7 @@
   .text-bold { font-size: 24px; }
   .icon-piano { width: 26px; height: 18px; }
   .icon-heart { width: 30px; height: 24px; }
-  .name-line-1 { font-size: 12px; margin-bottom: 4px; }
-  .name-line-2 { font-size: 20px; }
-  .pattuma-word { font-size: 15vh; }
+  .name-line-1 { font-size: 24px; margin-bottom: 8px; }
+  .name-line-2 { font-size: 40px; }
+  .pattuma-word { font-size: 20vh; }
 }

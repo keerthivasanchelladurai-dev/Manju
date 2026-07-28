@@ -40,11 +40,11 @@ const Super = () => {
 
         const cardDeck = [
             { header: "YOU GAVE ME...", text: "The freshness my heart never knew it needed.", color: "#5b21b6", image: "/images/pic2.webp" },
-            { header: "MY ONLY FANTASY...", text: "Is spending every moment with you.", color: "#5b21b6", image: "/images/pic3.webp" },
+            { header: "CAN YOU BE MY ONLY FANTASY...", text: "Is spending every moment with you.", color: "#5b21b6", image: "/images/pic3.webp" },
             { header: "OUR RELATIONSHIP WOULD BE...", text: "Just like a KitKat—full of sweet moments and happy breaks.", color: "#5b21b6", image: "/images/pic4.webp" },
-            { header: "YOU ARE MY...", text: "5 Star—rare, precious, and the best part of my life.", color: "#5b21b6", image: "/images/pic5.jpg" },
-            { header: "AND I...", text: "Can't stop thinking about you. My heart keeps revolving around you.", color: "#5b21b6", image: "/images/pic6.jpg" },
-            { header: "SO MY SWEET CHOCO PIE...", text: "Will you be mine? ❤️", color: "#5b21b6", image: "/images/pic7.webp" },
+            { header: "YOU ARE MY...", text: "rare, precious, and the best part of my life.", color: "#5b21b6", image: "/images/pic5.jpg" },
+            { header: "AND I...", text: "Can't stop thinking about you. My heart keeps revolving around you.", color: "#5b21b6", image: "/images/pic7.webp" },
+            { header: "SO MY SWEET CHOCO PIE...", text: "Will you be mine? ❤️", color: "#5b21b6", image: "/images/pic8.webp" },
             { header: "HAPPY BIRTHDAY", text: "Happy birthday to my fave person", color: "#5b21b6", image: "/images/me.jpg" }
         ];
 
@@ -167,7 +167,7 @@ const Super = () => {
                 cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
                 cardEl.style.top = `${y}px`;
                 cardContainer.appendChild(cardEl);
-                setTimeout(() => { if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl); }, 2500);
+                setTimeout(() => { if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl); }, 4000);
                 return;
             }
 
@@ -187,7 +187,7 @@ const Super = () => {
             cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
             cardEl.style.top = `${y}px`;
             cardContainer.appendChild(cardEl);
-            setTimeout(() => { if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl); }, 2500);
+            setTimeout(() => { if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl); }, 4000);
         }
 
         function isIntersecting(a, b) {
