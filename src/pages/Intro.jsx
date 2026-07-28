@@ -15,7 +15,7 @@ const Intro = () => {
         timeoutId = setTimeout(() => {
             const canvas = canvasRef.current;
             const displayArea = displayAreaRef.current;
-            
+
             if (!canvas || !displayArea) return;
 
             canvas.width = displayArea.offsetWidth;
@@ -47,8 +47,8 @@ const Intro = () => {
 
                 for (let i = 0; i < pixelsPerFrame; i++) {
                     if (currentIndex >= pixels.length) {
-                        navTimeoutId = setTimeout(() => { 
-                            navigate('/game'); 
+                        navTimeoutId = setTimeout(() => {
+                            navigate('/game');
                         }, 1500);
                         return;
                     }
@@ -71,15 +71,6 @@ const Intro = () => {
 
     return (
         <div className="intro-body">
-            <header className="top-header">
-                <svg className="menu-icon" viewBox="0 0 24 24">
-                    <line x1="4" y1="6" x2="20" y2="6"></line>
-                    <line x1="4" y1="12" x2="15" y2="12"></line>
-                    <circle cx="19.5" cy="12" r="1.5" fill="#fff" stroke="none"></circle>
-                    <line x1="4" y1="18" x2="20" y2="18"></line>
-                </svg>
-            </header>
-
             <main className="display-area" ref={displayAreaRef}>
                 <div className="texture-grid"></div>
                 <div className="texture-scanlines"></div>

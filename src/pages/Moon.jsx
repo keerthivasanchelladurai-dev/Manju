@@ -260,11 +260,17 @@ const Moon = () => {
                 }
             } else if (currentState === STATE.FORMING_HEART) {
                 if (drawProgress < Math.PI * 2) {
-                    drawProgress += 0.005;
+                    drawProgress += 0.025;
                 } else if (particleSystem) {
-                    particleSystem.position.x += (35 - particleSystem.position.x) * 0.02;
+                    const isMobile = window.innerWidth <= 768;
+                    const targetX = isMobile ? 0 : 35;
+                    const targetY = isMobile ? 15 : 0;
+                    
+                    particleSystem.position.x += (targetX - particleSystem.position.x) * 0.02;
+                    particleSystem.position.y += (targetY - particleSystem.position.y) * 0.02;
                     controls.enabled = false;
-                    if (particleSystem.position.x > 15) {
+                    
+                    if ((isMobile && Math.abs(particleSystem.position.y - targetY) < 5) || (!isMobile && particleSystem.position.x > 15)) {
                         setShowCarousel(true);
                     }
                 }

@@ -11,7 +11,7 @@ const Super = () => {
     const [cardsCollected, setCardsCollected] = useState(0);
     const [showMobileStart, setShowMobileStart] = useState(true);
     const [showWinMessage, setShowWinMessage] = useState(false);
-    
+
     // Use refs for game state that changes rapidly to avoid re-renders
     const keys = useRef({ left: false, right: false, jump: false });
     const gameState = useRef('PLAYING');
@@ -19,11 +19,11 @@ const Super = () => {
     const handleMobileStart = () => {
         setShowMobileStart(false);
         const doc = document.documentElement;
-        if (doc.requestFullscreen) doc.requestFullscreen().catch(() => {});
-        else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => {});
-        
+        if (doc.requestFullscreen) doc.requestFullscreen().catch(() => { });
+        else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => { });
+
         if (window.screen.orientation && window.screen.orientation.lock) {
-            window.screen.orientation.lock('landscape').catch(() => {});
+            window.screen.orientation.lock('landscape').catch(() => { });
         }
     };
 
@@ -40,7 +40,7 @@ const Super = () => {
         let cameraX = 0;
         let localCardsCollected = 0;
         const targetCards = 7;
-        
+
         let objects = [];
         let nextGenX = 0;
         let endSequenceGenerated = false;
@@ -62,19 +62,19 @@ const Super = () => {
         };
 
         const marioSprite = [
-            [0,0,0,1,1,1,1,1,0,0,0,0], [0,0,1,1,1,1,1,1,1,1,1,0], [0,0,2,2,2,3,3,2,3,0,0,0], [0,2,3,2,3,3,3,2,3,3,3,0],
-            [0,2,3,2,2,3,3,3,2,3,3,3], [0,2,2,3,3,3,3,2,2,2,2,0], [0,0,0,3,3,3,3,3,3,3,0,0], [0,0,1,1,4,1,1,4,1,1,0,0],
-            [0,1,1,1,4,1,1,4,1,1,1,0], [1,1,1,1,4,4,4,4,1,1,1,1], [3,3,1,4,3,4,4,3,4,1,3,3], [3,3,3,4,4,4,4,4,4,3,3,3],
-            [3,3,4,4,4,4,4,4,4,4,3,3], [0,0,4,4,4,0,0,4,4,4,0,0], [0,2,2,2,0,0,0,0,2,2,2,0], [2,2,2,2,0,0,0,0,2,2,2,2]
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], [0, 0, 2, 2, 2, 3, 3, 2, 3, 0, 0, 0], [0, 2, 3, 2, 3, 3, 3, 2, 3, 3, 3, 0],
+            [0, 2, 3, 2, 2, 3, 3, 3, 2, 3, 3, 3], [0, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2, 0], [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 0, 0], [0, 0, 1, 1, 4, 1, 1, 4, 1, 1, 0, 0],
+            [0, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 0], [1, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1], [3, 3, 1, 4, 3, 4, 4, 3, 4, 1, 3, 3], [3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+            [3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3], [0, 0, 4, 4, 4, 0, 0, 4, 4, 4, 0, 0], [0, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 0], [2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2]
         ];
 
         const blockSprite = [
-            [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5], [5,7,7,7,7,7,7,7,7,7,7,7,7,7,7,5], [5,7,6,6,6,6,6,6,6,6,6,6,6,6,8,5],
-            [5,7,6,5,6,6,6,6,6,6,6,6,5,6,8,5], [5,7,6,6,6,6,6,5,5,6,6,6,6,6,8,5], [5,7,6,6,6,6,5,6,6,5,6,6,6,6,8,5],
-            [5,7,6,6,6,6,6,6,6,5,6,6,6,6,8,5], [5,7,6,6,6,6,6,6,5,6,6,6,6,6,8,5], [5,7,6,6,6,6,6,5,6,6,6,6,6,6,8,5],
-            [5,7,6,6,6,6,6,5,6,6,6,6,6,6,8,5], [5,7,6,6,6,6,6,6,6,6,6,6,6,6,8,5], [5,7,6,6,6,6,6,5,6,6,6,6,6,6,8,5],
-            [5,7,6,5,6,6,6,6,6,6,6,6,5,6,8,5], [5,7,6,6,6,6,6,6,6,6,6,6,6,6,8,5], [5,7,8,8,8,8,8,8,8,8,8,8,8,8,8,5],
-            [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5], [5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5], [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 8, 5], [5, 7, 6, 6, 6, 6, 5, 6, 6, 5, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5], [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5], [5, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 5],
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
         ];
 
         let oldFloorY = 0;
@@ -88,7 +88,7 @@ const Super = () => {
             player.height = unit;
             player.gravity = height * 0.002;
             player.jumpPower = -Math.sqrt(2 * player.gravity * (height * 0.35));
-            player.speed = width * 0.0035;
+            player.speed = width * 0.0005;
 
             if (player.y === 0) {
                 player.y = newFloorY - player.height;
@@ -406,12 +406,12 @@ const Super = () => {
                     ctx.fillStyle = '#000';
                     ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
                     ctx.fillStyle = '#ff9900';
-                    for(let i=0; i<4; i++) {
-                        ctx.fillRect(obj.x + i * (obj.width/4), obj.y - 20, obj.width/4 - 2, 20);
-                        ctx.strokeRect(obj.x + i * (obj.width/4), obj.y - 20, obj.width/4 - 2, 20);
+                    for (let i = 0; i < 4; i++) {
+                        ctx.fillRect(obj.x + i * (obj.width / 4), obj.y - 20, obj.width / 4 - 2, 20);
+                        ctx.strokeRect(obj.x + i * (obj.width / 4), obj.y - 20, obj.width / 4 - 2, 20);
                     }
                     ctx.fillStyle = '#000';
-                    ctx.fillRect(obj.x + obj.width/2 - 20, obj.y + obj.height - 40, 40, 40);
+                    ctx.fillRect(obj.x + obj.width / 2 - 20, obj.y + obj.height - 40, 40, 40);
                 }
             }
 
@@ -460,8 +460,8 @@ const Super = () => {
                 <div id="winMessage" style={{ display: showWinMessage ? 'block' : 'none', pointerEvents: 'auto' }}>
                     COURSE CLEAR!<br />
                     <span style={{ fontSize: '24px', color: 'white', display: 'block', marginTop: '15px' }}>You got all 7 cards!</span>
-                    <button 
-                        onClick={handleReadMessage} 
+                    <button
+                        onClick={handleReadMessage}
                         style={{ padding: '15px 30px', fontFamily: "'Press Start 2P', cursive", fontSize: '16px', background: '#facc15', border: '4px solid #000', borderRadius: '8px', cursor: 'pointer', marginTop: '30px', display: 'inline-block', boxShadow: '4px 4px 0px #000', transition: 'transform 0.1s' }}
                     >
                         READ MESSAGE
