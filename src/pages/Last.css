@@ -1,0 +1,126 @@
+.last-body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  padding: 20px;
+}
+
+.particles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
+  animation: floatUp 10s infinite linear;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+.glass-card {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 600px;
+  padding: 50px 40px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: #fff;
+  transform: translateY(30px);
+  opacity: 0;
+  animation: slideUpFade 1.5s 0.5s ease forwards;
+}
+
+@keyframes slideUpFade {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%);
+  animation: rotateGlow 20s linear infinite;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.last-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  color: #ffddaa;
+  text-shadow: 0 0 15px rgba(255, 221, 170, 0.5);
+  letter-spacing: 2px;
+}
+
+.content-placeholder {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.2);
+  transition: background 0.3s;
+}
+
+.content-placeholder:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.signature {
+  margin-top: 30px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #ffddaa;
+  text-align: right;
+  padding-right: 20px;
+}
+
+@media (max-width: 600px) {
+  .last-title { font-size: 2.8rem; }
+  .content-placeholder { font-size: 1rem; padding: 20px; }
+  .glass-card { padding: 40px 20px; }
+}
+
+@media (max-height: 500px) {
+  .last-body { align-items: flex-start; }
+  .glass-card { margin-top: 20px; padding: 20px; }
+  .last-title { font-size: 2rem; margin-bottom: 10px; }
+  .content-placeholder { font-size: 1rem; padding: 15px; min-height: 100px; }
+  .signature { margin-top: 15px; font-size: 1.5rem; }
+}

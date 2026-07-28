@@ -1,0 +1,188 @@
+.moon-body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #000;
+  font-family: 'Montserrat', sans-serif;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+#splash-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 2.0s ease-out;
+  pointer-events: none;
+}
+
+.loader-text {
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 5px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.3; }
+  50% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 0;
+  box-sizing: border-box;
+}
+
+.handwritten-text {
+  font-family: 'Great Vibes', cursive;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+  text-align: center;
+}
+
+#hb-text {
+  font-size: 4rem;
+  margin-top: 5vh;
+  background: linear-gradient(90deg, #fff 0%, #ddd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#name-text {
+  font-size: 5rem;
+  margin-bottom: 10vh;
+  color: #ffddaa;
+}
+
+.visible { opacity: 1 !important; }
+.hidden { opacity: 0 !important; transition: opacity 1s ease; }
+
+@media (max-width: 768px) {
+  #hb-text { font-size: 2.8rem; margin-top: 8vh; }
+  #name-text { font-size: 3.5rem; margin-bottom: 15vh; }
+}
+
+@media (max-height: 500px) {
+  #ui-layer { padding: 10px 0; }
+  #hb-text { font-size: 2rem; margin-top: 10px; }
+  #name-text { font-size: 2.5rem; margin-bottom: 10px; }
+}
+
+#carousel-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-out;
+  font-family: 'Playfair Display', serif;
+}
+
+#carousel-container.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gift-boxes-wrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.moon-gift-box {
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  filter: drop-shadow(0 4px 15px rgba(255, 215, 0, 0.4));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.moon-gift-box:hover {
+  transform: scale(1.15) translateY(-10px);
+  filter: drop-shadow(0 8px 25px rgba(255, 215, 0, 0.7));
+}
+
+.play-message-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.play-message-text {
+  color: #fff;
+  font-size: 2.5rem;
+  font-style: italic;
+  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.play-super-btn {
+  background: linear-gradient(135deg, #ff7eb6, #d64984);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(214, 73, 132, 0.5);
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.play-super-btn:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(214, 73, 132, 0.7);
+}
+
+@media (max-width: 768px) {
+  #carousel-container { width: 100vw; height: 50vh; top: auto; bottom: 0; }
+  .gift-boxes-wrapper { gap: 15px; }
+  .moon-gift-box { width: 70px; height: 70px; }
+  .play-message-text { font-size: 1.8rem; }
+  .play-super-btn { padding: 12px 30px; font-size: 1.2rem; }
+}
+
+@media (max-height: 500px) {
+  #carousel-container { width: 100vw; height: 100vh; top: 0; left: 0; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); }
+  .gift-boxes-wrapper { gap: 20px; }
+  .moon-gift-box { width: 60px; height: 60px; }
+  .play-message-text { font-size: 1.5rem; }
+  .play-super-btn { padding: 10px 25px; font-size: 1.1rem; }
+}

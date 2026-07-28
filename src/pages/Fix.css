@@ -1,0 +1,171 @@
+.fix-body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  touch-action: none;
+}
+
+/* === HAND SEQUENCE === */
+#scrollCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 1;
+}
+
+/* === SHATTER === */
+#shatterCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 40;
+  pointer-events: none;
+  display: none;
+}
+#shatterCanvas.show { display: block; }
+
+/* === CHOICE UI === */
+#choice-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 30;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+#choice-screen.show { display: flex; opacity: 1; }
+
+.choice-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0 2px 15px rgba(0,0,0,0.5);
+  text-align: center;
+  max-width: 80%;
+  line-height: 1.4;
+}
+.btn-row { display: flex; gap: 25px; flex-wrap: wrap; justify-content: center; }
+
+.choice-btn {
+  padding: 14px 36px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+.btn-accept {
+  background: linear-gradient(135deg, #ff7eb6, #d64984);
+  color: white;
+  box-shadow: 0 6px 25px rgba(214, 73, 132, 0.45);
+}
+.btn-accept:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 35px rgba(214, 73, 132, 0.65); }
+
+.btn-leave {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+}
+.btn-leave:hover { background: rgba(255, 255, 255, 0.2); color: #fff; transform: translateY(-2px); }
+
+#leave-msg {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 40; display: none;
+  justify-content: center; align-items: center;
+  background: rgba(0, 0, 0, 0.75);
+}
+#leave-msg.show { display: flex; }
+#leave-msg .choice-text { color: rgba(255,255,255,0.5); font-size: 1.6rem; }
+
+/* ========================================
+   TELEPORT TUNNEL
+   ======================================== */
+#port-scene {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 60;
+  display: none;
+  background: #000;
+}
+#port-scene.active { display: block; }
+
+#port-crossfade {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: black;
+  z-index: 30;
+  opacity: 1;
+  transition: opacity 2s ease-in-out;
+  pointer-events: none;
+}
+#port-crossfade.fade-out { opacity: 0; }
+
+#port-canvas-container {
+  width: 100%; height: 100%;
+  position: absolute; top: 0; left: 0; z-index: 1;
+}
+
+#port-hud {
+  position: absolute; top: 55%; z-index: 10;
+  pointer-events: none; transition: all 0.01s linear; max-width: 80%;
+}
+.hud-left { left: 8%; right: auto; text-align: left; transform: translateY(-50%) perspective(600px) rotateY(15deg); }
+.hud-right { right: 8%; left: auto; text-align: right; transform: translateY(-50%) perspective(600px) rotateY(-15deg); }
+
+.port-msg-container {
+  padding: 0; opacity: 0; filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hud-left .port-msg-container { transform: translateX(-80px); }
+.hud-right .port-msg-container { transform: translateX(80px); }
+.port-msg-container.visible { opacity: 1; filter: blur(0); transform: translateX(0) !important; }
+
+#port-label {
+  display: inline-block; color: rgba(255,255,255,0.8);
+  font-size: 0.9rem; letter-spacing: 4px; margin-bottom: 8px;
+  text-transform: uppercase; font-weight: 600; padding: 2px 10px;
+}
+.hud-left #port-label { border-left: 3px solid #00f3ff; border-right: none; }
+.hud-right #port-label { border-right: 3px solid #00f3ff; border-left: none; }
+
+#port-message {
+  color: #ffffff; font-size: 4rem; font-weight: 900; font-style: italic;
+  text-transform: uppercase; text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+  margin: 0; line-height: 0.9; white-space: nowrap;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#port-flash {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: white; opacity: 0;
+  pointer-events: none; z-index: 20;
+  transition: opacity 0.2s ease-out;
+}
+#port-flash.final-flash { transition: opacity 2s ease-in; opacity: 1 !important; }
+
+@media (max-width: 768px) {
+  #port-hud { top: 70%; max-width: 90%; }
+  .hud-left { left: 5%; transform: translateY(-50%) perspective(400px) rotateY(5deg); }
+  .hud-right { right: 5%; transform: translateY(-50%) perspective(400px) rotateY(-5deg); }
+  #port-message { font-size: 2.2rem; white-space: normal; }
+  #port-label { font-size: 0.7rem; letter-spacing: 2px; }
+}

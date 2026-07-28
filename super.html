@@ -1,0 +1,1701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Mario Side-Scroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #5c94fc;
+            font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+            touch-action: none;
+            user-select: none;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .pop-card {
+            position: absolute;
+            background: #fffcf5;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+            animation: floatUpFade 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #4a3b2c;
+            font-family: 'Playfair Display', serif, sans-serif;
+            text-transform: uppercase;
+            width: 140px;
+            text-align: center;
+        }
+
+        .pop-card .image-placeholder {
+            width: 100%;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 0.8rem;
+            border: 2px dashed rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            text-transform: none;
+        }
+
+        @keyframes floatUpFade {
+            0% {
+                transform: translate(-50%, 0) scale(0.5);
+                opacity: 1;
+            }
+
+            20% {
+                transform: translate(-50%, -100px) scale(1.2);
+                opacity: 1;
+            }
+
+            70% {
+                transform: translate(-50%, -150px) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -250px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        #mario-ui {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 5vw;
+            color: white;
+            text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        .ui-block {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            #mario-ui {
+                font-size: 14px;
+                padding: 15px;
+            }
+
+            .pop-card {
+                font-size: 10px;
+                padding: 10px;
+                width: 100px;
+            }
+
+            .pop-card .image-placeholder {
+                height: 70px;
+                font-size: 0.6rem;
+            }
+        }
+
+        @media (max-height: 500px) {
+            #mario-ui {
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+
+            .pop-card {
+                font-size: 9px;
+                padding: 8px;
+                width: 90px;
+            }
+
+            .pop-card .image-placeholder {
+                height: 60px;
+            }
+
+            #controls {
+                bottom: 10px;
+            }
+
+            .btn {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+
+            #winMessage {
+                font-size: 28px;
+            }
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #000;
+            pointer-events: auto;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn:active {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0.95);
+        }
+
+        .d-pad {
+            display: flex;
+            gap: 15px;
+        }
+
+        @media (min-width: 1024px) {
+            #controls {
+                display: none;
+            }
+        }
+
+        #winMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #facc15;
+            text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-size: 48px;
+            text-align: center;
+            display: none;
+            line-height: 1.5;
+        }
+
+        #mobile-start {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            #mobile-start:not(.hidden) {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #5c94fc;
+                z-index: 1000;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+                color: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="ui-layer">
+        <div id="mario-ui">
+            <div class="ui-block">
+                <div>MARIO</div>
+                <div id="scoreDisplay">000000</div>
+            </div>
+            <div class="ui-block">
+                <div style="color: #facc15;">🪙 x<span id="coinDisplay">00</span></div>
+            </div>
+            <div class="ui-block">
+                <div>CARDS</div>
+                <div id="cardDisplay">0/7</div>
+            </div>
+            <div class="ui-block">
+                <div>WORLD</div>
+                <div>1-1</div>
+            </div>
+        </div>
+        <div id="cardContainer"></div>
+        <div id="winMessage" style="pointer-events: auto;">
+            COURSE CLEAR!<br>
+            <span style="font-size: 24px; color: white; display: block; margin-top: 15px;">You got all 7 cards!</span>
+            <button onclick="window.location.href='last.html'"
+                style="padding: 15px 30px; font-family: 'Press Start 2P', cursive; font-size: 16px; background: #facc15; border: 4px solid #000; border-radius: 8px; cursor: pointer; margin-top: 30px; display: inline-block; box-shadow: 4px 4px 0px #000; transition: transform 0.1s;">READ
+                MESSAGE</button>
+        </div>
+    </div>
+
+    <div id="mobile-start">
+        <h1 style="font-size: 24px; margin-bottom: 20px; text-shadow: 2px 2px 0 #000;">SUPER MARIO</h1>
+        <p style="margin-bottom: 30px; line-height: 1.5; font-size: 12px; text-shadow: 1px 1px 0 #000;">For the best
+            experience, please play in Landscape Mode.</p>
+        <div class="btn" id="btnEnterGame"
+            style="width: auto; padding: 15px 30px; border-radius: 12px; font-size: 16px; background: #e52521; color: white; border-color: #000;">
+            PLAY FULLSCREEN</div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="controls">
+        <div class="d-pad">
+            <div class="btn" id="btnLeft">◀</div>
+            <div class="btn" id="btnRight">▶</div>
+        </div>
+        <div class="btn" id="btnJump" style="border-radius: 12px; width: 90px; font-size: 16px;">JUMP</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const cardContainer = document.getElementById('cardContainer');
+        const mobileStart = document.getElementById('mobile-start');
+        const btnEnterGame = document.getElementById('btnEnterGame');
+
+        if (btnEnterGame) {
+            btnEnterGame.addEventListener('click', () => {
+                mobileStart.classList.add('hidden');
+
+                // Request Fullscreen
+                const doc = document.documentElement;
+                if (doc.requestFullscreen) doc.requestFullscreen().catch(() => { });
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => { });
+
+                // Attempt to lock orientation to landscape
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => { });
+                }
+            });
+        }
+
+        // Game State
+        let width, height, floorY;
+        let score = 0;
+        let coins = 0;
+        let cameraX = 0;
+        let cardsCollected = 0;
+        let targetCards = 7;
+        let gameState = 'PLAYING'; // PLAYING, SLIDING, WALKING, DONE
+
+        // World Objects
+        let objects = [];
+        let nextGenX = 0;
+        let endSequenceGenerated = false;
+
+        // Cards Deck
+        const cardDeck = [
+            { text: "⭐ Star Power", color: "#eab308", image: "images/pic2.webp" },
+            { text: "🍄 1-UP Mushroom", color: "#22c55e", image: "images/pic3.webp" },
+            { text: "🪙 100 Coins", color: "#f59e0b", image: "images/pic4.webp" },
+            { text: "🔥 Fire Flower", color: "#ef4444", image: "images/pic5.jpg" },
+            { text: "♠️ Spades Ace", color: "#111827", image: "images/pic6.jpg" },
+            { text: "🃏 The Joker", color: "#9333ea", image: "images/pic7.webp" },
+            { text: "👑 Princess Crown", color: "#ec4899", image: "images/pic8.webp" }
+        ];
+
+        // Player Object
+        const player = {
+            x: 50, y: 0, width: 0, height: 0,
+            vx: 0, vy: 0, speed: 0, jumpPower: 0, gravity: 0,
+            grounded: false, direction: 1
+        };
+        const keys = { left: false, right: false, jump: false };
+
+        const marioSprite = [
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 2, 2, 2, 3, 3, 2, 3, 0, 0, 0],
+            [0, 2, 3, 2, 3, 3, 3, 2, 3, 3, 3, 0],
+            [0, 2, 3, 2, 2, 3, 3, 3, 2, 3, 3, 3],
+            [0, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2, 0],
+            [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            [0, 0, 1, 1, 4, 1, 1, 4, 1, 1, 0, 0],
+            [0, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 0],
+            [1, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1],
+            [3, 3, 1, 4, 3, 4, 4, 3, 4, 1, 3, 3],
+            [3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+            [3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3],
+            [0, 0, 4, 4, 4, 0, 0, 4, 4, 4, 0, 0],
+            [0, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 0],
+            [2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2]
+        ];
+
+        const blockSprite = [
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+            [5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 5, 6, 6, 5, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 5],
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        ];
+
+        let oldFloorY = 0;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            const newFloorY = height * 0.85;
+
+            // Physics & Sizes based on screen height to ensure playability
+            const unit = height * 0.08;
+
+            player.width = unit * 0.8;
+            player.height = unit;
+            player.gravity = height * 0.002;
+            player.jumpPower = -Math.sqrt(2 * player.gravity * (height * 0.35)); // Jump 35% of screen
+            player.speed = width * 0.0035; // Slower, deliberate step-to-step speed
+
+            if (player.y === 0) {
+                player.y = newFloorY - player.height;
+            } else if (oldFloorY > 0) {
+                const diffY = newFloorY - oldFloorY;
+                player.y += diffY;
+                objects.forEach(obj => {
+                    obj.y += diffY;
+                    if (obj.type === 'flagpole') obj.flagY += diffY;
+                });
+            }
+
+            floorY = newFloorY;
+            oldFloorY = newFloorY;
+        }
+        window.addEventListener('resize', resize);
+
+        // Input Handling
+        window.addEventListener('keydown', (e) => {
+            if (gameState !== 'PLAYING') return;
+            if (e.code === 'ArrowLeft') keys.left = true;
+            if (e.code === 'ArrowRight') keys.right = true;
+            if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft') keys.left = false;
+            if (e.code === 'ArrowRight') keys.right = false;
+            if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = false;
+        });
+
+        // Prevent global scrolling which can make the game feel "frozen" or broken
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.tagName !== 'BUTTON' && !e.target.classList.contains('btn')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        const addTouch = (id, keyName) => {
+            const el = document.getElementById(id);
+            const press = (e) => { e.preventDefault(); if (gameState === 'PLAYING') keys[keyName] = true; };
+            const release = (e) => { e.preventDefault(); keys[keyName] = false; };
+            el.addEventListener('touchstart', press, { passive: false });
+            el.addEventListener('mousedown', press);
+            el.addEventListener('touchend', release, { passive: false });
+            el.addEventListener('mouseup', release);
+            el.addEventListener('mouseleave', release);
+        };
+        addTouch('btnLeft', 'left');
+        addTouch('btnRight', 'right');
+        addTouch('btnJump', 'jump');
+
+        function generateLevelChunk() {
+            if (endSequenceGenerated) return;
+
+            const unit = height * 0.08;
+            const blockW = unit;
+
+            // Generate content ahead of the camera
+            while (nextGenX < cameraX + width * 2) {
+
+                // If we hit 7 cards, stop endless gen and spawn the end sequence
+                if (cardsCollected >= targetCards && !endSequenceGenerated) {
+                    endSequenceGenerated = true;
+
+                    // Spawn Flagpole
+                    objects.push({
+                        type: 'flagpole',
+                        x: nextGenX + width * 0.5,
+                        y: floorY - (unit * 6),
+                        width: unit * 0.5,
+                        height: unit * 6,
+                        flagY: floorY - (unit * 6) + 10
+                    });
+
+                    // Spawn Castle
+                    objects.push({
+                        type: 'castle',
+                        x: nextGenX + width * 1.2,
+                        y: floorY - (unit * 4),
+                        width: unit * 4,
+                        height: unit * 4
+                    });
+
+                    break;
+                }
+
+                const r = Math.random();
+                const gap = width * (0.3 + Math.random() * 0.4); // Distance between objects
+                const yPos = floorY - (height * 0.25) - blockW; // Reachable height
+
+                if (r > 0.6) {
+                    objects.push({ type: 'brick', x: nextGenX + gap, y: yPos, width: blockW, height: blockW, bounceOffset: 0 });
+                    objects.push({ type: 'block', x: nextGenX + gap + blockW, y: yPos, width: blockW, height: blockW, isHit: false, bounceOffset: 0 });
+                    objects.push({ type: 'brick', x: nextGenX + gap + blockW * 2, y: yPos, width: blockW, height: blockW, bounceOffset: 0 });
+                    nextGenX += gap + blockW * 2;
+                } else if (r > 0.3) {
+                    objects.push({
+                        type: 'block',
+                        x: nextGenX + gap,
+                        y: yPos,
+                        width: blockW,
+                        height: blockW,
+                        isHit: false,
+                        bounceOffset: 0
+                    });
+                    nextGenX += gap;
+                } else {
+                    const pipeHeight = unit * (1 + Math.random());
+                    objects.push({
+                        type: 'pipe',
+                        x: nextGenX + gap,
+                        y: floorY - pipeHeight,
+                        width: unit * 1.2,
+                        height: pipeHeight
+                    });
+                    nextGenX += gap;
+                }
+            }
+
+            // Cleanup old objects behind camera
+            objects = objects.filter(obj => obj.x + obj.width > cameraX - width);
+        }
+
+        function showCard(x, y) {
+            if (cardsCollected >= cardDeck.length) {
+                // Fallback if extra blocks are hit after all cards are collected
+                const cardEl = document.createElement('div');
+                cardEl.className = 'pop-card';
+                cardEl.innerHTML = `
+                    <div class="image-placeholder"><img src="images/heart.webp" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                    <div style="color: #f59e0b">🪙 Extra Coins!</div>
+                `;
+                cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
+                cardEl.style.top = `${y}px`;
+                cardContainer.appendChild(cardEl);
+
+                setTimeout(() => {
+                    if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl);
+                }, 2500);
+                return;
+            }
+
+            const cardData = cardDeck[cardsCollected];
+            cardsCollected++;
+
+            document.getElementById('cardDisplay').innerText = `${cardsCollected}/7`;
+
+            const cardEl = document.createElement('div');
+            cardEl.className = 'pop-card';
+            cardEl.innerHTML = `
+                <div class="image-placeholder"><img src="${cardData.image}" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                <div style="color: ${cardData.color}">${cardData.text}</div>
+            `;
+            // Screen position relative to camera
+            cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
+            cardEl.style.top = `${y}px`;
+            cardContainer.appendChild(cardEl);
+
+            setTimeout(() => {
+                if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl);
+            }, 2500);
+        }
+
+        function update() {
+            generateLevelChunk();
+
+            // Handle State Machine
+            if (gameState === 'PLAYING') {
+                if (keys.left) { player.vx = -player.speed; player.direction = -1; }
+                else if (keys.right) { player.vx = player.speed; player.direction = 1; }
+                else { player.vx *= 0.4; } // High friction for immediate stop and step-by-step feel
+
+                if (keys.jump && player.grounded) {
+                    player.vy = player.jumpPower;
+                    player.grounded = false;
+                }
+            } else if (gameState === 'SLIDING') {
+                player.vx = 0;
+                player.vy = player.speed * 0.5; // Slide down slowly
+            } else if (gameState === 'WALKING') {
+                player.vx = player.speed * 0.5;
+                player.direction = 1;
+                // Move towards castle door
+                const castle = objects.find(o => o.type === 'castle');
+                if (castle && player.x > castle.x + castle.width / 2) {
+                    gameState = 'DONE';
+                    player.vx = 0;
+                    document.getElementById('winMessage').style.display = 'block';
+
+                    // Automatically redirect to last.html after a few seconds
+                    setTimeout(() => {
+                        window.location.href = 'last.html';
+                    }, 4000);
+                }
+            }
+
+            player.vy += player.gravity;
+
+            // X-Axis Collision
+            player.x += player.vx;
+
+            // Prevent going backwards past camera
+            if (player.x < cameraX && gameState === 'PLAYING') {
+                player.x = cameraX;
+                player.vx = 0;
+            }
+
+            for (let obj of objects) {
+                if (obj.type === 'block' || obj.type === 'brick' || obj.type === 'pipe') {
+                    if (isIntersecting(player, obj)) {
+                        // Resolve X collision
+                        if (player.vx > 0) player.x = obj.x - player.width;
+                        else if (player.vx < 0) player.x = obj.x + obj.width;
+                        player.vx = 0;
+                    }
+                } else if (obj.type === 'flagpole' && gameState === 'PLAYING') {
+                    // Hit Flagpole
+                    if (isIntersecting(player, { x: obj.x, y: obj.y, width: 10, height: obj.height })) {
+                        gameState = 'SLIDING';
+                        player.x = obj.x - player.width + 5;
+                        player.vx = 0;
+                        player.vy = 0;
+                        score += 5000;
+                        document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                    }
+                }
+            }
+
+            // Y-Axis Collision
+            player.y += player.vy;
+            player.grounded = false;
+
+            // Floor collision
+            if (player.y + player.height >= floorY) {
+                player.y = floorY - player.height;
+                player.vy = 0;
+                player.grounded = true;
+                if (gameState === 'SLIDING') gameState = 'WALKING';
+            }
+
+            for (let obj of objects) {
+                if (obj.type === 'block' || obj.type === 'brick' || obj.type === 'pipe') {
+                    if (isIntersecting(player, obj)) {
+                        // Resolve Y collision
+                        if (player.vy > 0) { // Landing on top
+                            player.y = obj.y - player.height;
+                            player.vy = 0;
+                            player.grounded = true;
+                        } else if (player.vy < 0 && (obj.type === 'block' || obj.type === 'brick')) { // Hitting block from below
+                            player.y = obj.y + obj.height;
+                            player.vy = 0; // Prevent jumping through
+
+                            if (obj.type === 'block' && !obj.isHit) {
+                                obj.isHit = true;
+                                obj.bounceOffset = - (obj.height * 0.3);
+
+                                score += 100;
+                                coins += 1;
+                                document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                                document.getElementById('coinDisplay').innerText = coins.toString().padStart(2, '0');
+
+                                showCard(obj.x, obj.y);
+                            } else if (obj.type === 'brick' && obj.bounceOffset === 0) {
+                                obj.bounceOffset = - (obj.height * 0.3); // Bounce animation
+                                score += 10; // Small score for hitting a brick
+                                document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                            }
+                        } else if (player.vy < 0 && obj.type === 'pipe') {
+                            player.y = obj.y + obj.height;
+                            player.vy = 0;
+                        }
+                    }
+                }
+
+                // Block & Brick bounce animation update
+                if ((obj.type === 'block' || obj.type === 'brick') && obj.bounceOffset < 0) {
+                    obj.bounceOffset += 2;
+                    if (obj.bounceOffset > 0) obj.bounceOffset = 0;
+                }
+
+                // Flag slide animation update
+                if (obj.type === 'flagpole' && gameState === 'SLIDING') {
+                    if (obj.flagY < floorY - 40) obj.flagY += player.speed * 0.5;
+                }
+            }
+
+            // Update Camera Tracking
+            if (gameState === 'PLAYING') {
+                const targetCameraX = player.x - width * 0.3;
+                if (targetCameraX > cameraX) {
+                    cameraX = targetCameraX;
+                }
+            }
+        }
+
+        function isIntersecting(a, b) {
+            return (
+                a.x < b.x + b.width &&
+                a.x + a.width > b.x &&
+                a.y < b.y + b.height &&
+                a.y + a.height > b.y
+            );
+        }
+
+        function drawPixelArt(ctx, art, x, y, displayWidth, displayHeight, facingRight) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (!facingRight) {
+                ctx.scale(-1, 1);
+                ctx.translate(-displayWidth, 0);
+            }
+
+            const pixelW = displayWidth / art[0].length;
+            const pixelH = displayHeight / art.length;
+
+            for (let row = 0; row < art.length; row++) {
+                for (let col = 0; col < art[row].length; col++) {
+                    const colorCode = art[row][col];
+                    if (colorCode !== 0) {
+                        switch (colorCode) {
+                            case 1: ctx.fillStyle = '#E52521'; break;
+                            case 2: ctx.fillStyle = '#6B4226'; break;
+                            case 3: ctx.fillStyle = '#FFCFA2'; break;
+                            case 4: ctx.fillStyle = '#0055AF'; break;
+                            case 5: ctx.fillStyle = '#000000'; break;
+                            case 6: ctx.fillStyle = '#F9812A'; break;
+                            case 7: ctx.fillStyle = '#FCE38A'; break;
+                            case 8: ctx.fillStyle = '#D95319'; break;
+                        }
+                        ctx.fillRect(Math.floor(col * pixelW), Math.floor(row * pixelH), Math.ceil(pixelW) + 0.5, Math.ceil(pixelH) + 0.5);
+                    }
+                }
+            }
+            ctx.restore();
+        }
+
+        function draw() {
+            // Background
+            ctx.fillStyle = '#5c94fc';
+            ctx.fillRect(0, 0, width, height);
+
+            // Ground
+            ctx.fillStyle = '#c84c0c';
+            ctx.fillRect(0, floorY, width, height - floorY);
+            ctx.fillStyle = '#f8d8b0';
+            ctx.fillRect(0, floorY, width, 6);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, floorY + 6, width, 2);
+
+            // Draw World Objects
+            ctx.save();
+            ctx.translate(-cameraX, 0);
+
+            for (let obj of objects) {
+                if (obj.type === 'block') {
+                    if (obj.isHit) {
+                        // Empty Block (Solid brown)
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+                        ctx.fillStyle = '#000';
+                        ctx.strokeRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+                        // Rivets
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(obj.x + 4, obj.y + obj.bounceOffset + 4, 4, 4);
+                        ctx.fillRect(obj.x + obj.width - 8, obj.y + obj.bounceOffset + 4, 4, 4);
+                        ctx.fillRect(obj.x + 4, obj.y + obj.bounceOffset + obj.height - 8, 4, 4);
+                        ctx.fillRect(obj.x + obj.width - 8, obj.y + obj.bounceOffset + obj.height - 8, 4, 4);
+                    } else {
+                        drawPixelArt(ctx, blockSprite, obj.x, obj.y + obj.bounceOffset, obj.width, obj.height, true);
+                    }
+                }
+                else if (obj.type === 'brick') {
+                    ctx.fillStyle = '#c84c0c'; // Brick color
+                    ctx.fillRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+
+                    ctx.strokeStyle = '#000'; // Mortar color
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+
+                    ctx.beginPath();
+                    // Horizontal line middle
+                    ctx.moveTo(obj.x, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + obj.width, obj.y + obj.bounceOffset + obj.height / 2);
+                    // Vertical lines (staggered for brick pattern)
+                    ctx.moveTo(obj.x + obj.width / 2, obj.y + obj.bounceOffset);
+                    ctx.lineTo(obj.x + obj.width / 2, obj.y + obj.bounceOffset + obj.height / 2);
+
+                    ctx.moveTo(obj.x + obj.width / 4, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + obj.width / 4, obj.y + obj.bounceOffset + obj.height);
+
+                    ctx.moveTo(obj.x + 3 * obj.width / 4, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + 3 * obj.width / 4, obj.y + obj.bounceOffset + obj.height);
+                    ctx.stroke();
+                }
+                else if (obj.type === 'pipe') {
+                    // Pipe Body
+                    ctx.fillStyle = '#00cc00';
+                    ctx.fillRect(obj.x + 5, obj.y + 20, obj.width - 10, obj.height - 20);
+                    ctx.fillStyle = '#000';
+                    ctx.strokeRect(obj.x + 5, obj.y + 20, obj.width - 10, obj.height - 20);
+                    // Pipe Top Lip
+                    ctx.fillStyle = '#00cc00';
+                    ctx.fillRect(obj.x, obj.y, obj.width, 20);
+                    ctx.strokeRect(obj.x, obj.y, obj.width, 20);
+                    // Highlight
+                    ctx.fillStyle = '#55ff55';
+                    ctx.fillRect(obj.x + 10, obj.y + 2, 10, obj.height - 2);
+                }
+                else if (obj.type === 'flagpole') {
+                    // Pole
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(obj.x, obj.y, 8, obj.height);
+                    // Ball on top
+                    ctx.fillStyle = '#22c55e';
+                    ctx.beginPath();
+                    ctx.arc(obj.x + 4, obj.y, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Flag
+                    ctx.fillStyle = '#22c55e';
+                    ctx.beginPath();
+                    ctx.moveTo(obj.x - 40, obj.flagY);
+                    ctx.lineTo(obj.x, obj.flagY - 20);
+                    ctx.lineTo(obj.x, obj.flagY + 20);
+                    ctx.fill();
+                }
+                else if (obj.type === 'castle') {
+                    ctx.fillStyle = '#d1d5db'; // Light gray stone
+                    ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+                    ctx.fillStyle = '#000';
+                    ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
+                    // Door
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(obj.x + obj.width / 2, obj.y + obj.height, obj.width * 0.2, Math.PI, 0);
+                    ctx.fill();
+                    // Battlements
+                    for (let i = 0; i < 3; i++) {
+                        ctx.fillRect(obj.x + (i * obj.width / 3) + 10, obj.y - 20, obj.width / 3 - 20, 20);
+                    }
+                }
+            }
+
+            // Draw Player
+            if (gameState !== 'DONE') {
+                const isFacingRight = player.direction === 1;
+                drawPixelArt(ctx, marioSprite, player.x, player.y, player.width, player.height, isFacingRight);
+            }
+
+            ctx.restore();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Init
+        resize();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Mario Side-Scroller</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #5c94fc;
+            font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+            touch-action: none;
+            user-select: none;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .pop-card {
+            position: absolute;
+            background: #fffcf5;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+            animation: floatUpFade 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #4a3b2c;
+            font-family: 'Playfair Display', serif, sans-serif;
+            text-transform: uppercase;
+            width: 140px;
+            text-align: center;
+        }
+
+        .pop-card .image-placeholder {
+            width: 100%;
+            height: 100px;
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 0.8rem;
+            border: 2px dashed rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+            text-transform: none;
+        }
+
+        @keyframes floatUpFade {
+            0% {
+                transform: translate(-50%, 0) scale(0.5);
+                opacity: 1;
+            }
+
+            20% {
+                transform: translate(-50%, -100px) scale(1.2);
+                opacity: 1;
+            }
+
+            70% {
+                transform: translate(-50%, -150px) scale(1.2);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -250px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        #mario-ui {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 5vw;
+            color: white;
+            text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        .ui-block {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            #mario-ui {
+                font-size: 14px;
+                padding: 15px;
+            }
+
+            .pop-card {
+                font-size: 10px;
+                padding: 10px;
+                width: 100px;
+            }
+
+            .pop-card .image-placeholder {
+                height: 70px;
+                font-size: 0.6rem;
+            }
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #000;
+            pointer-events: auto;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn:active {
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0.95);
+        }
+
+        .d-pad {
+            display: flex;
+            gap: 15px;
+        }
+
+        @media (min-width: 1024px) {
+            #controls {
+                display: none;
+            }
+        }
+
+        #winMessage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #facc15;
+            text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+            font-size: 48px;
+            text-align: center;
+            display: none;
+            line-height: 1.5;
+        }
+
+        #mobile-start {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            #mobile-start:not(.hidden) {
+                display: flex;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #5c94fc;
+                z-index: 1000;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+                color: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="ui-layer">
+        <div id="mario-ui">
+            <div class="ui-block">
+                <div>MARIO</div>
+                <div id="scoreDisplay">000000</div>
+            </div>
+            <div class="ui-block">
+                <div style="color: #facc15;">🪙 x<span id="coinDisplay">00</span></div>
+            </div>
+            <div class="ui-block">
+                <div>CARDS</div>
+                <div id="cardDisplay">0/7</div>
+            </div>
+            <div class="ui-block">
+                <div>WORLD</div>
+                <div>1-1</div>
+            </div>
+        </div>
+        <div id="cardContainer"></div>
+        <div id="winMessage" style="pointer-events: auto;">
+            COURSE CLEAR!<br>
+            <span style="font-size: 24px; color: white; display: block; margin-top: 15px;">You got all 7 cards!</span>
+            <button onclick="window.location.href='last.html'"
+                style="padding: 15px 30px; font-family: 'Press Start 2P', cursive; font-size: 16px; background: #facc15; border: 4px solid #000; border-radius: 8px; cursor: pointer; margin-top: 30px; display: inline-block; box-shadow: 4px 4px 0px #000; transition: transform 0.1s;">READ
+                MESSAGE</button>
+        </div>
+    </div>
+
+    <div id="mobile-start">
+        <h1 style="font-size: 24px; margin-bottom: 20px; text-shadow: 2px 2px 0 #000;">SUPER MARIO</h1>
+        <p style="margin-bottom: 30px; line-height: 1.5; font-size: 12px; text-shadow: 1px 1px 0 #000;">For the best
+            experience, please play in Landscape Mode.</p>
+        <div class="btn" id="btnEnterGame"
+            style="width: auto; padding: 15px 30px; border-radius: 12px; font-size: 16px; background: #e52521; color: white; border-color: #000;">
+            PLAY FULLSCREEN</div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="controls">
+        <div class="d-pad">
+            <div class="btn" id="btnLeft">◀</div>
+            <div class="btn" id="btnRight">▶</div>
+        </div>
+        <div class="btn" id="btnJump" style="border-radius: 12px; width: 90px; font-size: 16px;">JUMP</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const cardContainer = document.getElementById('cardContainer');
+        const mobileStart = document.getElementById('mobile-start');
+        const btnEnterGame = document.getElementById('btnEnterGame');
+
+        if (btnEnterGame) {
+            btnEnterGame.addEventListener('click', () => {
+                mobileStart.classList.add('hidden');
+
+                // Request Fullscreen
+                const doc = document.documentElement;
+                if (doc.requestFullscreen) doc.requestFullscreen().catch(() => { });
+                else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => { });
+
+                // Attempt to lock orientation to landscape
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(() => { });
+                }
+            });
+        }
+
+        // Game State
+        let width, height, floorY;
+        let score = 0;
+        let coins = 0;
+        let cameraX = 0;
+        let cardsCollected = 0;
+        let targetCards = 7;
+        let gameState = 'PLAYING'; // PLAYING, SLIDING, WALKING, DONE
+
+        // World Objects
+        let objects = [];
+        let nextGenX = 0;
+        let endSequenceGenerated = false;
+
+        // Cards Deck
+        const cardDeck = [
+            { text: "⭐ Star Power", color: "#eab308", image: "images/pic2.webp" },
+            { text: "🍄 1-UP Mushroom", color: "#22c55e", image: "images/pic3.webp" },
+            { text: "🪙 100 Coins", color: "#f59e0b", image: "images/pic4.webp" },
+            { text: "🔥 Fire Flower", color: "#ef4444", image: "images/pic5.jpg" },
+            { text: "♠️ Spades Ace", color: "#111827", image: "images/pic6.jpg" },
+            { text: "🃏 The Joker", color: "#9333ea", image: "images/pic7.webp" },
+            { text: "👑 Princess Crown", color: "#ec4899", image: "images/pic8.webp" }
+        ];
+
+        // Player Object
+        const player = {
+            x: 50, y: 0, width: 0, height: 0,
+            vx: 0, vy: 0, speed: 0, jumpPower: 0, gravity: 0,
+            grounded: false, direction: 1
+        };
+        const keys = { left: false, right: false, jump: false };
+
+        const marioSprite = [
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 2, 2, 2, 3, 3, 2, 3, 0, 0, 0],
+            [0, 2, 3, 2, 3, 3, 3, 2, 3, 3, 3, 0],
+            [0, 2, 3, 2, 2, 3, 3, 3, 2, 3, 3, 3],
+            [0, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2, 0],
+            [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 0, 0],
+            [0, 0, 1, 1, 4, 1, 1, 4, 1, 1, 0, 0],
+            [0, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 0],
+            [1, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1],
+            [3, 3, 1, 4, 3, 4, 4, 3, 4, 1, 3, 3],
+            [3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+            [3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3],
+            [0, 0, 4, 4, 4, 0, 0, 4, 4, 4, 0, 0],
+            [0, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 0],
+            [2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 2, 2]
+        ];
+
+        const blockSprite = [
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+            [5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 5, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 5, 6, 6, 5, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 6, 5, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 8, 5],
+            [5, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8, 5],
+            [5, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 5],
+            [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]
+        ];
+
+        let oldFloorY = 0;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            const newFloorY = height * 0.85;
+
+            // Physics & Sizes based on screen height to ensure playability
+            const unit = height * 0.08;
+
+            player.width = unit * 0.8;
+            player.height = unit;
+            player.gravity = height * 0.002;
+            player.jumpPower = -Math.sqrt(2 * player.gravity * (height * 0.35)); // Jump 35% of screen
+            player.speed = width * 0.0035; // Slower, deliberate step-to-step speed
+
+            if (player.y === 0) {
+                player.y = newFloorY - player.height;
+            } else if (oldFloorY > 0) {
+                const diffY = newFloorY - oldFloorY;
+                player.y += diffY;
+                objects.forEach(obj => {
+                    obj.y += diffY;
+                    if (obj.type === 'flagpole') obj.flagY += diffY;
+                });
+            }
+
+            floorY = newFloorY;
+            oldFloorY = newFloorY;
+        }
+        window.addEventListener('resize', resize);
+
+        // Input Handling
+        window.addEventListener('keydown', (e) => {
+            if (gameState !== 'PLAYING') return;
+            if (e.code === 'ArrowLeft') keys.left = true;
+            if (e.code === 'ArrowRight') keys.right = true;
+            if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft') keys.left = false;
+            if (e.code === 'ArrowRight') keys.right = false;
+            if (e.code === 'ArrowUp' || e.code === 'Space') keys.jump = false;
+        });
+
+        // Prevent global scrolling which can make the game feel "frozen" or broken
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.tagName !== 'BUTTON' && !e.target.classList.contains('btn')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        const addTouch = (id, keyName) => {
+            const el = document.getElementById(id);
+            const press = (e) => { e.preventDefault(); if (gameState === 'PLAYING') keys[keyName] = true; };
+            const release = (e) => { e.preventDefault(); keys[keyName] = false; };
+            el.addEventListener('touchstart', press, { passive: false });
+            el.addEventListener('mousedown', press);
+            el.addEventListener('touchend', release, { passive: false });
+            el.addEventListener('mouseup', release);
+            el.addEventListener('mouseleave', release);
+        };
+        addTouch('btnLeft', 'left');
+        addTouch('btnRight', 'right');
+        addTouch('btnJump', 'jump');
+
+        function generateLevelChunk() {
+            if (endSequenceGenerated) return;
+
+            const unit = height * 0.08;
+            const blockW = unit;
+
+            // Generate content ahead of the camera
+            while (nextGenX < cameraX + width * 2) {
+
+                // If we hit 7 cards, stop endless gen and spawn the end sequence
+                if (cardsCollected >= targetCards && !endSequenceGenerated) {
+                    endSequenceGenerated = true;
+
+                    // Spawn Flagpole
+                    objects.push({
+                        type: 'flagpole',
+                        x: nextGenX + width * 0.5,
+                        y: floorY - (unit * 6),
+                        width: unit * 0.5,
+                        height: unit * 6,
+                        flagY: floorY - (unit * 6) + 10
+                    });
+
+                    // Spawn Castle
+                    objects.push({
+                        type: 'castle',
+                        x: nextGenX + width * 1.2,
+                        y: floorY - (unit * 4),
+                        width: unit * 4,
+                        height: unit * 4
+                    });
+
+                    break;
+                }
+
+                const r = Math.random();
+                const gap = width * (0.3 + Math.random() * 0.4); // Distance between objects
+                const yPos = floorY - (height * 0.25) - blockW; // Reachable height
+
+                if (r > 0.6) {
+                    objects.push({ type: 'brick', x: nextGenX + gap, y: yPos, width: blockW, height: blockW, bounceOffset: 0 });
+                    objects.push({ type: 'block', x: nextGenX + gap + blockW, y: yPos, width: blockW, height: blockW, isHit: false, bounceOffset: 0 });
+                    objects.push({ type: 'brick', x: nextGenX + gap + blockW * 2, y: yPos, width: blockW, height: blockW, bounceOffset: 0 });
+                    nextGenX += gap + blockW * 2;
+                } else if (r > 0.3) {
+                    objects.push({
+                        type: 'block',
+                        x: nextGenX + gap,
+                        y: yPos,
+                        width: blockW,
+                        height: blockW,
+                        isHit: false,
+                        bounceOffset: 0
+                    });
+                    nextGenX += gap;
+                } else {
+                    const pipeHeight = unit * (1 + Math.random());
+                    objects.push({
+                        type: 'pipe',
+                        x: nextGenX + gap,
+                        y: floorY - pipeHeight,
+                        width: unit * 1.2,
+                        height: pipeHeight
+                    });
+                    nextGenX += gap;
+                }
+            }
+
+            // Cleanup old objects behind camera
+            objects = objects.filter(obj => obj.x + obj.width > cameraX - width);
+        }
+
+        function showCard(x, y) {
+            if (cardsCollected >= cardDeck.length) {
+                // Fallback if extra blocks are hit after all cards are collected
+                const cardEl = document.createElement('div');
+                cardEl.className = 'pop-card';
+                cardEl.innerHTML = `
+                    <div class="image-placeholder"><img src="images/heart.webp" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                    <div style="color: #f59e0b">🪙 Extra Coins!</div>
+                `;
+                cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
+                cardEl.style.top = `${y}px`;
+                cardContainer.appendChild(cardEl);
+
+                setTimeout(() => {
+                    if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl);
+                }, 2500);
+                return;
+            }
+
+            const cardData = cardDeck[cardsCollected];
+            cardsCollected++;
+
+            document.getElementById('cardDisplay').innerText = `${cardsCollected}/7`;
+
+            const cardEl = document.createElement('div');
+            cardEl.className = 'pop-card';
+            cardEl.innerHTML = `
+                <div class="image-placeholder"><img src="${cardData.image}" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                <div style="color: ${cardData.color}">${cardData.text}</div>
+            `;
+            // Screen position relative to camera
+            cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
+            cardEl.style.top = `${y}px`;
+            cardContainer.appendChild(cardEl);
+
+            setTimeout(() => {
+                if (cardContainer.contains(cardEl)) cardContainer.removeChild(cardEl);
+            }, 2500);
+        }
+
+        function update() {
+            generateLevelChunk();
+
+            // Handle State Machine
+            if (gameState === 'PLAYING') {
+                if (keys.left) { player.vx = -player.speed; player.direction = -1; }
+                else if (keys.right) { player.vx = player.speed; player.direction = 1; }
+                else { player.vx *= 0.4; } // High friction for immediate stop and step-by-step feel
+
+                if (keys.jump && player.grounded) {
+                    player.vy = player.jumpPower;
+                    player.grounded = false;
+                }
+            } else if (gameState === 'SLIDING') {
+                player.vx = 0;
+                player.vy = player.speed * 0.5; // Slide down slowly
+            } else if (gameState === 'WALKING') {
+                player.vx = player.speed * 0.5;
+                player.direction = 1;
+                // Move towards castle door
+                const castle = objects.find(o => o.type === 'castle');
+                if (castle && player.x > castle.x + castle.width / 2) {
+                    gameState = 'DONE';
+                    player.vx = 0;
+                    document.getElementById('winMessage').style.display = 'block';
+
+                    // Automatically redirect to last.html after a few seconds
+                    setTimeout(() => {
+                        window.location.href = 'last.html';
+                    }, 4000);
+                }
+            }
+
+            player.vy += player.gravity;
+
+            // X-Axis Collision
+            player.x += player.vx;
+
+            // Prevent going backwards past camera
+            if (player.x < cameraX && gameState === 'PLAYING') {
+                player.x = cameraX;
+                player.vx = 0;
+            }
+
+            for (let obj of objects) {
+                if (obj.type === 'block' || obj.type === 'brick' || obj.type === 'pipe') {
+                    if (isIntersecting(player, obj)) {
+                        // Resolve X collision
+                        if (player.vx > 0) player.x = obj.x - player.width;
+                        else if (player.vx < 0) player.x = obj.x + obj.width;
+                        player.vx = 0;
+                    }
+                } else if (obj.type === 'flagpole' && gameState === 'PLAYING') {
+                    // Hit Flagpole
+                    if (isIntersecting(player, { x: obj.x, y: obj.y, width: 10, height: obj.height })) {
+                        gameState = 'SLIDING';
+                        player.x = obj.x - player.width + 5;
+                        player.vx = 0;
+                        player.vy = 0;
+                        score += 5000;
+                        document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                    }
+                }
+            }
+
+            // Y-Axis Collision
+            player.y += player.vy;
+            player.grounded = false;
+
+            // Floor collision
+            if (player.y + player.height >= floorY) {
+                player.y = floorY - player.height;
+                player.vy = 0;
+                player.grounded = true;
+                if (gameState === 'SLIDING') gameState = 'WALKING';
+            }
+
+            for (let obj of objects) {
+                if (obj.type === 'block' || obj.type === 'brick' || obj.type === 'pipe') {
+                    if (isIntersecting(player, obj)) {
+                        // Resolve Y collision
+                        if (player.vy > 0) { // Landing on top
+                            player.y = obj.y - player.height;
+                            player.vy = 0;
+                            player.grounded = true;
+                        } else if (player.vy < 0 && (obj.type === 'block' || obj.type === 'brick')) { // Hitting block from below
+                            player.y = obj.y + obj.height;
+                            player.vy = 0; // Prevent jumping through
+
+                            if (obj.type === 'block' && !obj.isHit) {
+                                obj.isHit = true;
+                                obj.bounceOffset = - (obj.height * 0.3);
+
+                                score += 100;
+                                coins += 1;
+                                document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                                document.getElementById('coinDisplay').innerText = coins.toString().padStart(2, '0');
+
+                                showCard(obj.x, obj.y);
+                            } else if (obj.type === 'brick' && obj.bounceOffset === 0) {
+                                obj.bounceOffset = - (obj.height * 0.3); // Bounce animation
+                                score += 10; // Small score for hitting a brick
+                                document.getElementById('scoreDisplay').innerText = score.toString().padStart(6, '0');
+                            }
+                        } else if (player.vy < 0 && obj.type === 'pipe') {
+                            player.y = obj.y + obj.height;
+                            player.vy = 0;
+                        }
+                    }
+                }
+
+                // Block & Brick bounce animation update
+                if ((obj.type === 'block' || obj.type === 'brick') && obj.bounceOffset < 0) {
+                    obj.bounceOffset += 2;
+                    if (obj.bounceOffset > 0) obj.bounceOffset = 0;
+                }
+
+                // Flag slide animation update
+                if (obj.type === 'flagpole' && gameState === 'SLIDING') {
+                    if (obj.flagY < floorY - 40) obj.flagY += player.speed * 0.5;
+                }
+            }
+
+            // Update Camera Tracking
+            if (gameState === 'PLAYING') {
+                const targetCameraX = player.x - width * 0.3;
+                if (targetCameraX > cameraX) {
+                    cameraX = targetCameraX;
+                }
+            }
+        }
+
+        function isIntersecting(a, b) {
+            return (
+                a.x < b.x + b.width &&
+                a.x + a.width > b.x &&
+                a.y < b.y + b.height &&
+                a.y + a.height > b.y
+            );
+        }
+
+        function drawPixelArt(ctx, art, x, y, displayWidth, displayHeight, facingRight) {
+            ctx.save();
+            ctx.translate(x, y);
+            if (!facingRight) {
+                ctx.scale(-1, 1);
+                ctx.translate(-displayWidth, 0);
+            }
+
+            const pixelW = displayWidth / art[0].length;
+            const pixelH = displayHeight / art.length;
+
+            for (let row = 0; row < art.length; row++) {
+                for (let col = 0; col < art[row].length; col++) {
+                    const colorCode = art[row][col];
+                    if (colorCode !== 0) {
+                        switch (colorCode) {
+                            case 1: ctx.fillStyle = '#E52521'; break;
+                            case 2: ctx.fillStyle = '#6B4226'; break;
+                            case 3: ctx.fillStyle = '#FFCFA2'; break;
+                            case 4: ctx.fillStyle = '#0055AF'; break;
+                            case 5: ctx.fillStyle = '#000000'; break;
+                            case 6: ctx.fillStyle = '#F9812A'; break;
+                            case 7: ctx.fillStyle = '#FCE38A'; break;
+                            case 8: ctx.fillStyle = '#D95319'; break;
+                        }
+                        ctx.fillRect(Math.floor(col * pixelW), Math.floor(row * pixelH), Math.ceil(pixelW) + 0.5, Math.ceil(pixelH) + 0.5);
+                    }
+                }
+            }
+            ctx.restore();
+        }
+
+        function draw() {
+            // Background
+            ctx.fillStyle = '#5c94fc';
+            ctx.fillRect(0, 0, width, height);
+
+            // Ground
+            ctx.fillStyle = '#c84c0c';
+            ctx.fillRect(0, floorY, width, height - floorY);
+            ctx.fillStyle = '#f8d8b0';
+            ctx.fillRect(0, floorY, width, 6);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, floorY + 6, width, 2);
+
+            // Draw World Objects
+            ctx.save();
+            ctx.translate(-cameraX, 0);
+
+            for (let obj of objects) {
+                if (obj.type === 'block') {
+                    if (obj.isHit) {
+                        // Empty Block (Solid brown)
+                        ctx.fillStyle = '#8B4513';
+                        ctx.fillRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+                        ctx.fillStyle = '#000';
+                        ctx.strokeRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+                        // Rivets
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(obj.x + 4, obj.y + obj.bounceOffset + 4, 4, 4);
+                        ctx.fillRect(obj.x + obj.width - 8, obj.y + obj.bounceOffset + 4, 4, 4);
+                        ctx.fillRect(obj.x + 4, obj.y + obj.bounceOffset + obj.height - 8, 4, 4);
+                        ctx.fillRect(obj.x + obj.width - 8, obj.y + obj.bounceOffset + obj.height - 8, 4, 4);
+                    } else {
+                        drawPixelArt(ctx, blockSprite, obj.x, obj.y + obj.bounceOffset, obj.width, obj.height, true);
+                    }
+                }
+                else if (obj.type === 'brick') {
+                    ctx.fillStyle = '#c84c0c'; // Brick color
+                    ctx.fillRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+
+                    ctx.strokeStyle = '#000'; // Mortar color
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(obj.x, obj.y + obj.bounceOffset, obj.width, obj.height);
+
+                    ctx.beginPath();
+                    // Horizontal line middle
+                    ctx.moveTo(obj.x, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + obj.width, obj.y + obj.bounceOffset + obj.height / 2);
+                    // Vertical lines (staggered for brick pattern)
+                    ctx.moveTo(obj.x + obj.width / 2, obj.y + obj.bounceOffset);
+                    ctx.lineTo(obj.x + obj.width / 2, obj.y + obj.bounceOffset + obj.height / 2);
+
+                    ctx.moveTo(obj.x + obj.width / 4, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + obj.width / 4, obj.y + obj.bounceOffset + obj.height);
+
+                    ctx.moveTo(obj.x + 3 * obj.width / 4, obj.y + obj.bounceOffset + obj.height / 2);
+                    ctx.lineTo(obj.x + 3 * obj.width / 4, obj.y + obj.bounceOffset + obj.height);
+                    ctx.stroke();
+                }
+                else if (obj.type === 'pipe') {
+                    // Pipe Body
+                    ctx.fillStyle = '#00cc00';
+                    ctx.fillRect(obj.x + 5, obj.y + 20, obj.width - 10, obj.height - 20);
+                    ctx.fillStyle = '#000';
+                    ctx.strokeRect(obj.x + 5, obj.y + 20, obj.width - 10, obj.height - 20);
+                    // Pipe Top Lip
+                    ctx.fillStyle = '#00cc00';
+                    ctx.fillRect(obj.x, obj.y, obj.width, 20);
+                    ctx.strokeRect(obj.x, obj.y, obj.width, 20);
+                    // Highlight
+                    ctx.fillStyle = '#55ff55';
+                    ctx.fillRect(obj.x + 10, obj.y + 2, 10, obj.height - 2);
+                }
+                else if (obj.type === 'flagpole') {
+                    // Pole
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(obj.x, obj.y, 8, obj.height);
+                    // Ball on top
+                    ctx.fillStyle = '#22c55e';
+                    ctx.beginPath();
+                    ctx.arc(obj.x + 4, obj.y, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Flag
+                    ctx.fillStyle = '#22c55e';
+                    ctx.beginPath();
+                    ctx.moveTo(obj.x - 40, obj.flagY);
+                    ctx.lineTo(obj.x, obj.flagY - 20);
+                    ctx.lineTo(obj.x, obj.flagY + 20);
+                    ctx.fill();
+                }
+                else if (obj.type === 'castle') {
+                    ctx.fillStyle = '#d1d5db'; // Light gray stone
+                    ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+                    ctx.fillStyle = '#000';
+                    ctx.strokeRect(obj.x, obj.y, obj.width, obj.height);
+                    // Door
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.arc(obj.x + obj.width / 2, obj.y + obj.height, obj.width * 0.2, Math.PI, 0);
+                    ctx.fill();
+                    // Battlements
+                    for (let i = 0; i < 3; i++) {
+                        ctx.fillRect(obj.x + (i * obj.width / 3) + 10, obj.y - 20, obj.width / 3 - 20, 20);
+                    }
+                }
+            }
+
+            // Draw Player
+            if (gameState !== 'DONE') {
+                const isFacingRight = player.direction === 1;
+                drawPixelArt(ctx, marioSprite, player.x, player.y, player.width, player.height, isFacingRight);
+            }
+
+            ctx.restore();
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Init
+        resize();
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+
+>>>>>>> 13fafbfcae2adbd281336457e9352aa2dc6c9775
+
+</html>

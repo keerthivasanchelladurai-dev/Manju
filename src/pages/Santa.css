@@ -1,0 +1,166 @@
+.santa-body {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, #0b0c2a 0%, #1a1b4b 40%, #2d1f5e 70%, #0b0c2a 100%);
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* === STARS === */
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  animation: twinkle infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* === MOON === */
+.moon {
+  position: absolute;
+  top: 8%;
+  right: 12%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 35% 35%, #fffde7 0%, #ffd54f 60%, #ffb300 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 40px 15px rgba(255, 213, 79, 0.3), 0 0 80px 30px rgba(255, 213, 79, 0.15);
+}
+
+/* === SNOW GROUND === */
+.snow-ground {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 18%;
+  background: linear-gradient(to bottom, #e8eaf6 0%, #c5cae9 100%);
+  border-top-left-radius: 50% 30%;
+  border-top-right-radius: 50% 30%;
+  z-index: 2;
+  box-shadow: 0 -8px 20px rgba(255, 255, 255, 0.15);
+}
+
+/* === SANTA === */
+#santa {
+  position: absolute;
+  top: 12%;
+  z-index: 10;
+  width: 280px;
+  height: auto;
+  filter: drop-shadow(3px 6px 10px rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+}
+
+/* === GIFT BOX (2D SVG) === */
+#gift {
+  position: absolute;
+  left: 50%;
+  margin-left: -30px;
+  width: 60px;
+  height: 60px;
+  z-index: 15;
+  cursor: pointer;
+  opacity: 0;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+#gift:hover {
+  transform: scale(1.15);
+}
+
+/* === CENTERED GIFT OVERLAY === */
+#gift-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 50;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+#gift-overlay.show {
+  display: flex;
+  opacity: 1;
+}
+
+#gift-big {
+  width: 180px;
+  height: 180px;
+  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
+  animation: gentleBounce 2s ease-in-out infinite;
+}
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.overlay-text {
+  font-family: 'Mountains of Christmas', cursive;
+  color: #ffd700;
+  font-size: 2.2rem;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 2px 3px 6px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.overlay-btn {
+  padding: 14px 40px;
+  font-family: 'Mountains of Christmas', cursive;
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, #ff5252, #d32f2f);
+  color: white;
+  border: 3px solid #ffcdd2;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+  transition: all 0.3s ease;
+}
+.overlay-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(211, 47, 47, 0.6);
+  background: linear-gradient(135deg, #ff6e6e, #e53935);
+}
+
+/* === WHITE SCREEN === */
+#white-screen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: white;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+}
+#white-screen.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+@media (max-width: 800px) and (orientation: portrait) {
+  #santa { width: 220px; }
+  .moon { width: 60px; height: 60px; top: 6%; right: 8%; }
+  #gift-big { width: 140px; height: 140px; }
+  .overlay-text { font-size: 1.8rem; }
+  .overlay-btn { padding: 12px 30px; font-size: 1.2rem; }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  #santa { width: 180px; }
+  .moon { width: 50px; height: 50px; top: 8%; right: 5%; }
+  #gift-big { width: 100px; height: 100px; }
+  #gift-overlay { gap: 15px; }
+  .overlay-text { font-size: 1.6rem; }
+  .overlay-btn { padding: 10px 24px; font-size: 1.1rem; }
+}

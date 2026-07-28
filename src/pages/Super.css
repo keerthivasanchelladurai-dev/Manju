@@ -1,0 +1,179 @@
+.super-body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #5c94fc;
+  font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+  touch-action: none;
+  user-select: none;
+  position: relative;
+}
+
+.super-body #gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.super-body #ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.super-body .pop-card {
+  position: absolute;
+  background: #fffcf5;
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+  animation: floatUpFade 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #4a3b2c;
+  font-family: 'Playfair Display', serif, sans-serif;
+  text-transform: uppercase;
+  width: 140px;
+  text-align: center;
+}
+
+.super-body .pop-card .image-placeholder {
+  width: 100%;
+  height: 100px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
+  font-size: 0.8rem;
+  border: 2px dashed rgba(0, 0, 0, 0.15);
+  box-sizing: border-box;
+  text-transform: none;
+}
+
+@keyframes floatUpFade {
+  0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
+  20% { transform: translate(-50%, -100px) scale(1.2); opacity: 1; }
+  70% { transform: translate(-50%, -150px) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -250px) scale(1); opacity: 0; }
+}
+
+.super-body #mario-ui {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 5vw;
+  color: white;
+  text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+  font-size: 24px;
+  line-height: 1.5;
+}
+
+.super-body .ui-block {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .super-body #mario-ui { font-size: 14px; padding: 15px; }
+  .super-body .pop-card { font-size: 10px; padding: 10px; width: 100px; }
+  .super-body .pop-card .image-placeholder { height: 70px; font-size: 0.6rem; }
+}
+
+@media (max-height: 500px) {
+  .super-body #mario-ui { font-size: 12px; padding: 10px 15px; }
+  .super-body .pop-card { font-size: 9px; padding: 8px; width: 90px; }
+  .super-body .pop-card .image-placeholder { height: 60px; }
+  .super-body #controls { bottom: 10px; }
+  .super-body .btn { width: 50px; height: 50px; font-size: 16px; }
+  .super-body #winMessage { font-size: 28px; }
+}
+
+.super-body #controls {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.super-body .btn {
+  background: rgba(255, 255, 255, 0.3);
+  border: 4px solid rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #000;
+  pointer-events: auto;
+  backdrop-filter: blur(4px);
+}
+
+.super-body .btn:active {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0.95);
+}
+
+.super-body .d-pad {
+  display: flex;
+  gap: 15px;
+}
+
+@media (min-width: 1024px) {
+  .super-body #controls { display: none; }
+}
+
+.super-body #winMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #facc15;
+  text-shadow: 4px 4px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+  font-size: 48px;
+  text-align: center;
+  display: none;
+  line-height: 1.5;
+  pointer-events: auto;
+}
+
+.super-body #mobile-start {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .super-body #mobile-start.show {
+      display: flex;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #5c94fc;
+      z-index: 1000;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      color: white;
+  }
+}

@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Nunito", sans-serif;
+  --font-display: "Fredoka", sans-serif;
+  
+  --color-bunny-light: #ffe4e6;
+  --color-bunny-pink: #fda4af;
+  --color-bunny-main: #fb7185;
+  --color-bunny-dark: #e11d48;
+
+  --animate-hop: hop 1s infinite;
+  --animate-fade-in: fadeIn 0.5s ease-out forwards;
+  --animate-bounce-in: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+  @keyframes hop {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes bounceIn {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+}
+
+@layer base {
+  body {
+    touch-action: pan-x pan-y;
+  }
+}
