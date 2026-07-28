@@ -57,11 +57,11 @@ const Index = () => {
                             <rect x="105" y="146" width="6" height="10" fill="#fff" stroke="#333" strokeWidth="1.5" rx="1" />
                         </svg>
                         <h3 className="font-display text-3xl font-bold text-gray-800 mb-6">Are you absolutely sure you want to continue?</h3>
-                        <div className="flex gap-4">
-                            <button onClick={() => nextStep(2)} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-bold text-lg transition-all shadow-md">
+                        <div className="flex flex-wrap justify-center gap-4 w-full">
+                            <button onClick={() => nextStep(2)} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-bold text-lg transition-all shadow-md w-full sm:w-auto">
                                 Yes, I'm sure!
                             </button>
-                            <button onClick={goBack} className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full font-bold text-lg transition-all">
+                            <button onClick={goBack} className="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full font-bold text-lg transition-all w-full sm:w-auto">
                                 Wait, no
                             </button>
                         </div>
@@ -85,8 +85,8 @@ const Index = () => {
                             <path d="M 85 150 Q 100 145 115 150" stroke="#333" strokeWidth="3" fill="none" strokeLinecap="round" />
                         </svg>
                         <h3 className="font-display text-3xl font-bold text-gray-800 mb-6">Like, really, REALLY sure?</h3>
-                        <div className="flex gap-4">
-                            <button onClick={() => nextStep(3)} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-bold text-lg transition-all shadow-md">
+                        <div className="flex flex-wrap justify-center gap-4 w-full">
+                            <button onClick={() => nextStep(3)} className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-bold text-lg transition-all shadow-md w-full sm:w-auto">
                                 Yes, definitely!
                             </button>
                         </div>
@@ -111,8 +111,8 @@ const Index = () => {
                             <path d="M 85 155 Q 100 175 115 155 Z" fill="#fca5a5" />
                         </svg>
                         <h3 className="font-display text-3xl font-bold text-gray-800 mb-6">Okay, last chance to turn back... Ready?</h3>
-                        <div className="flex gap-4">
-                            <button onClick={() => nextStep(4)} className="px-8 py-4 bg-bunny-main hover:bg-bunny-dark text-white rounded-full font-bold text-xl transition-all shadow-lg animate-pulse">
+                        <div className="flex flex-wrap justify-center gap-4 w-full">
+                            <button onClick={() => nextStep(4)} className="px-8 py-4 bg-bunny-main hover:bg-bunny-dark text-white rounded-full font-bold text-xl transition-all shadow-lg animate-pulse w-full sm:w-auto">
                                 Show me what's next!
                             </button>
                         </div>
@@ -132,15 +132,15 @@ const Index = () => {
                             </p>
                         </div>
 
-                        <div className="mt-10 flex gap-4">
+                        <div className="mt-10 flex flex-wrap justify-center gap-4 w-full">
                             <button 
                                 onClick={proceedToSurprise} 
                                 disabled={isLoading}
-                                className={`px-8 py-3 text-white rounded-full font-bold text-lg transition-all shadow-md flex items-center gap-2 ${isLoading ? 'bg-purple-500' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                className={`px-8 py-3 text-white rounded-full font-bold text-lg transition-all shadow-md flex justify-center items-center gap-2 w-full sm:w-auto ${isLoading ? 'bg-purple-500' : 'bg-blue-500 hover:bg-blue-600'}`}
                             >
                                 {isLoading ? 'Loading the magic... ✨' : "I am ready, let's go! 🚀"}
                             </button>
-                            <button onClick={goBack} className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full font-bold text-lg transition-all">
+                            <button onClick={goBack} className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full font-bold text-lg transition-all w-full sm:w-auto">
                                 I'll come back later
                             </button>
                         </div>

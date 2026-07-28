@@ -5,7 +5,7 @@
   height: 100vh;
   overflow: hidden;
   background-color: #5c94fc;
-  font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+  font-family: 'Fredoka', 'Nunito', sans-serif;
   touch-action: none;
   user-select: none;
   position: relative;
@@ -30,38 +30,56 @@
 
 .super-body .pop-card {
   position: absolute;
-  background: #fffcf5;
-  border: 2px solid rgba(0,0,0,0.1);
-  border-radius: 8px;
-  padding: 12px;
-  font-weight: bold;
-  font-size: 14px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 15px 12px;
+  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.4);
   animation: floatUpFade 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  color: #4a3b2c;
-  font-family: 'Playfair Display', serif, sans-serif;
-  text-transform: uppercase;
-  width: 140px;
+  gap: 10px;
+  width: 160px;
   text-align: center;
+  z-index: 50;
 }
 
-.super-body .pop-card .image-placeholder {
+.super-body .pop-card-header {
+  color: #5b21b6;
+  font-family: 'Playfair Display', serif, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+}
+
+.super-body .pop-card-inner {
+  border: 3px solid #a855f7;
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
   width: 100%;
-  height: 100px;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-radius: 4px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.super-body .pop-card-inner .image-placeholder {
+  width: 100%;
+  height: 90px;
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #888;
-  font-size: 0.8rem;
-  border: 2px dashed rgba(0, 0, 0, 0.15);
-  box-sizing: border-box;
+  border: none;
+}
+
+.super-body .pop-card-footer {
+  font-family: 'Caveat', 'Great Vibes', 'Playfair Display', cursive, serif;
+  font-style: italic;
+  font-size: 15px;
+  font-weight: 600;
   text-transform: none;
 }
 

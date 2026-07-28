@@ -398,20 +398,27 @@ const Game = () => {
         setTimeout(() => { setBtnVisible(true); }, 5500);
 
         const resizeAndDraw = () => {
-            const maxPixelWidth = Math.floor((window.innerWidth * 0.35) / gridWidth);
-            const maxPixelHeight = Math.floor((window.innerHeight * 0.55) / gridHeight);
-            const pixelSize = Math.max(1, Math.min(6, Math.min(maxPixelWidth, maxPixelHeight)));
+            const isMobilePortrait = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
+            const widthFactor = isMobilePortrait ? 0.75 : 0.35;
+            const heightFactor = isMobilePortrait ? 0.45 : 0.55;
+            
+            const maxPixelWidth = Math.floor((window.innerWidth * widthFactor) / gridWidth);
+            const maxPixelHeight = Math.floor((window.innerHeight * heightFactor) / gridHeight);
+            const maxPixelSize = isMobilePortrait ? 8 : 6;
+            const pixelSize = Math.max(1, Math.min(maxPixelSize, Math.min(maxPixelWidth, maxPixelHeight)));
 
             const targetWidth = gridWidth * pixelSize;
             const targetHeight = gridHeight * pixelSize;
             
             const cakeContainer = document.getElementById('cakeContainer');
-            if(cakeContainer && contexts[1].canvas.width !== targetWidth) {
+            if (cakeContainer) {
                 cakeContainer.style.width = targetWidth + 'px';
                 cakeContainer.style.height = targetHeight + 'px';
-                for (let i = 1; i <= 5; i++) {
-                    contexts[i].canvas.width = targetWidth;
-                    contexts[i].canvas.height = targetHeight;
+                if (contexts[1].canvas.width !== targetWidth || contexts[1].canvas.height !== targetHeight) {
+                    for (let i = 1; i <= 5; i++) {
+                        contexts[i].canvas.width = targetWidth;
+                        contexts[i].canvas.height = targetHeight;
+                    }
                 }
             }
 

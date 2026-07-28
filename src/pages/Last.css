@@ -82,24 +82,72 @@
   letter-spacing: 2px;
 }
 
-.content-placeholder {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
-  min-height: 150px;
+.emotion-tabs {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  border: 1px dashed rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  padding: 30px;
-  background: rgba(0, 0, 0, 0.2);
-  transition: background 0.3s;
+  gap: 10px;
+  margin-bottom: 25px;
 }
 
-.content-placeholder:hover {
-  background: rgba(0, 0, 0, 0.3);
+.emotion-tab {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.emotion-tab:hover, .emotion-tab.active {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+}
+
+.message-content {
+  font-family: 'Playfair Display', serif;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.message-content.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.message-content.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.message-title {
+  font-size: 1.4rem;
+  color: #ffd1dc;
+  margin-bottom: 15px;
+  margin-top: 0;
+}
+
+.message-text {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
 }
 
 .signature {

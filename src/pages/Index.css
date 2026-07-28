@@ -9,18 +9,6 @@
   opacity: 1;
 }
 
-#orientation-warning {
-  display: none;
-}
-
-@media (max-width: 768px) and (orientation: portrait) {
-  #orientation-warning {
-      display: flex;
-  }
-  #main-content {
-      display: none !important;
-  }
-}
 
 .bunny-image {
   width: 250px;

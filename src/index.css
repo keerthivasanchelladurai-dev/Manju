@@ -31,4 +31,13 @@
   body {
     touch-action: pan-x pan-y;
   }
+  
+  #root > div {
+    animation: pageFadeIn 1s ease-in-out;
+  }
+  
+  @keyframes pageFadeIn {
+    from { opacity: 0; filter: blur(4px); }
+    to { opacity: 1; filter: blur(0); }
+  }
 }

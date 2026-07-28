@@ -18,13 +18,6 @@ const Super = () => {
 
     const handleMobileStart = () => {
         setShowMobileStart(false);
-        const doc = document.documentElement;
-        if (doc.requestFullscreen) doc.requestFullscreen().catch(() => { });
-        else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => { });
-
-        if (window.screen.orientation && window.screen.orientation.lock) {
-            window.screen.orientation.lock('landscape').catch(() => { });
-        }
     };
 
     const handleReadMessage = () => {
@@ -46,13 +39,13 @@ const Super = () => {
         let endSequenceGenerated = false;
 
         const cardDeck = [
-            { text: "⭐ Star Power", color: "#eab308", image: "/images/pic2.webp" },
-            { text: "🍄 1-UP Mushroom", color: "#22c55e", image: "/images/pic3.webp" },
-            { text: "🪙 100 Coins", color: "#f59e0b", image: "/images/pic4.webp" },
-            { text: "🔥 Fire Flower", color: "#ef4444", image: "/images/pic5.jpg" },
-            { text: "♠️ Spades Ace", color: "#111827", image: "/images/pic6.jpg" },
-            { text: "🃏 The Joker", color: "#9333ea", image: "/images/pic7.webp" },
-            { text: "👑 Princess Crown", color: "#ec4899", image: "/images/pic8.webp" }
+            { header: "YOU GAVE ME...", text: "The freshness my heart never knew it needed.", color: "#5b21b6", image: "/images/pic2.webp" },
+            { header: "MY ONLY FANTASY...", text: "Is spending every moment with you.", color: "#5b21b6", image: "/images/pic3.webp" },
+            { header: "OUR RELATIONSHIP WOULD BE...", text: "Just like a KitKat—full of sweet moments and happy breaks.", color: "#5b21b6", image: "/images/pic4.webp" },
+            { header: "YOU ARE MY...", text: "5 Star—rare, precious, and the best part of my life.", color: "#5b21b6", image: "/images/pic5.jpg" },
+            { header: "AND I...", text: "Can't stop thinking about you. My heart keeps revolving around you.", color: "#5b21b6", image: "/images/pic6.jpg" },
+            { header: "SO MY SWEET CHOCO PIE...", text: "Will you be mine? ❤️", color: "#5b21b6", image: "/images/pic7.webp" },
+            { header: "HAPPY BIRTHDAY", text: "Happy birthday to my fave person", color: "#5b21b6", image: "/images/me.jpg" }
         ];
 
         const player = {
@@ -88,7 +81,7 @@ const Super = () => {
             player.height = unit;
             player.gravity = height * 0.002;
             player.jumpPower = -Math.sqrt(2 * player.gravity * (height * 0.35));
-            player.speed = width * 0.0005;
+            player.speed = width * 0.005;
 
             if (player.y === 0) {
                 player.y = newFloorY - player.height;
@@ -165,8 +158,11 @@ const Super = () => {
                 const cardEl = document.createElement('div');
                 cardEl.className = 'pop-card';
                 cardEl.innerHTML = `
-                    <div class="image-placeholder"><img src="/images/heart.webp" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
-                    <div style="color: #f59e0b">🪙 Extra Coins!</div>
+                    <div class="pop-card-header">BONUS!</div>
+                    <div class="pop-card-inner">
+                        <div class="image-placeholder"><img src="/images/heart.webp" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                    </div>
+                    <div class="pop-card-footer" style="color: #f59e0b">🪙 Extra Coins!</div>
                 `;
                 cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
                 cardEl.style.top = `${y}px`;
@@ -182,8 +178,11 @@ const Super = () => {
             const cardEl = document.createElement('div');
             cardEl.className = 'pop-card';
             cardEl.innerHTML = `
-                <div class="image-placeholder"><img src="${cardData.image}" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
-                <div style="color: ${cardData.color}">${cardData.text}</div>
+                <div class="pop-card-header">${cardData.header}</div>
+                <div class="pop-card-inner">
+                    <div class="image-placeholder"><img src="${cardData.image}" style="max-width: 100%; max-height: 100%; object-fit: contain;"></div>
+                </div>
+                <div class="pop-card-footer" style="color: ${cardData.color}">${cardData.text}</div>
             `;
             cardEl.style.left = `${(x - cameraX) + (player.width / 2)}px`;
             cardEl.style.top = `${y}px`;
@@ -196,8 +195,23 @@ const Super = () => {
         }
 
         let animationFrameId;
+        let lastTimeTick = performance.now();
+        let currentTime = 400;
+
         function update() {
             generateLevelChunk();
+
+            if (gameState.current === 'PLAYING' || gameState.current === 'WALKING' || gameState.current === 'SLIDING') {
+                const now = performance.now();
+                if (now - lastTimeTick > 150) { // Fast time tick
+                    lastTimeTick = now;
+                    if (currentTime > 0) {
+                        currentTime--;
+                        const timeDisplay = document.getElementById('timeDisplay');
+                        if (timeDisplay) timeDisplay.innerText = currentTime.toString().padStart(3, '0');
+                    }
+                }
+            }
 
             if (gameState.current === 'PLAYING') {
                 if (keys.current.left) { player.vx = -player.speed; player.direction = -1; }
@@ -454,6 +468,10 @@ const Super = () => {
                     <div className="ui-block">
                         <div>WORLD</div>
                         <div>1-1</div>
+                    </div>
+                    <div className="ui-block">
+                        <div>TIME</div>
+                        <div id="timeDisplay">400</div>
                     </div>
                 </div>
                 <div id="cardContainer" ref={cardContainerRef}></div>

@@ -228,8 +228,8 @@ const Moon = () => {
                     if (moonMesh) moonMesh.visible = false;
                     const el1 = document.getElementById('hb-text');
                     const el2 = document.getElementById('name-text');
-                    if(el1) el1.classList.add('hidden');
-                    if(el2) el2.classList.add('hidden');
+                    if (el1) el1.classList.add('hidden');
+                    if (el2) el2.classList.add('hidden');
                     createParticleSystem();
                 }
                 if (moonMesh) moonMesh.rotation.y += 0.002;
@@ -265,11 +265,11 @@ const Moon = () => {
                     const isMobile = window.innerWidth <= 768;
                     const targetX = isMobile ? 0 : 35;
                     const targetY = isMobile ? 15 : 0;
-                    
+
                     particleSystem.position.x += (targetX - particleSystem.position.x) * 0.02;
                     particleSystem.position.y += (targetY - particleSystem.position.y) * 0.02;
                     controls.enabled = false;
-                    
+
                     if ((isMobile && Math.abs(particleSystem.position.y - targetY) < 5) || (!isMobile && particleSystem.position.x > 15)) {
                         setShowCarousel(true);
                     }
@@ -336,7 +336,7 @@ const Moon = () => {
 
             <div id="ui-layer">
                 <div id="hb-text" className="handwritten-text">Happy Birthday</div>
-                <div id="name-text" className="handwritten-text">Ambrin</div>
+                <div id="name-text" className="handwritten-text">Devi</div>
             </div>
 
             <div id="carousel-container" className={showCarousel ? 'show' : ''}>
@@ -345,12 +345,12 @@ const Moon = () => {
                         {[0, 1, 2].map((i) => (
                             <div key={i} className="moon-gift-box" onClick={handleGiftClick}>
                                 <svg viewBox="0 0 100 100">
-                                    <rect x="15" y="35" width="70" height="55" fill="#FF0000" rx="5" stroke="#CC0000" strokeWidth="2"/>
-                                    <rect x="10" y="25" width="80" height="14" fill="#CC0000" rx="3" stroke="#990000" strokeWidth="2"/>
-                                    <rect x="42" y="25" width="16" height="65" fill="#FFD700"/>
-                                    <rect x="10" y="48" width="80" height="16" fill="#FFD700"/>
-                                    <path d="M 50,25 C 32,5 20,12 45,25 C 70,12 58,5 50,25 Z" fill="#FFD700" stroke="#B8860B" strokeWidth="1"/>
-                                    <circle cx="50" cy="25" r="5" fill="#B8860B"/>
+                                    <rect x="15" y="35" width="70" height="55" fill="#FF0000" rx="5" stroke="#CC0000" strokeWidth="2" />
+                                    <rect x="10" y="25" width="80" height="14" fill="#CC0000" rx="3" stroke="#990000" strokeWidth="2" />
+                                    <rect x="42" y="25" width="16" height="65" fill="#FFD700" />
+                                    <rect x="10" y="48" width="80" height="16" fill="#FFD700" />
+                                    <path d="M 50,25 C 32,5 20,12 45,25 C 70,12 58,5 50,25 Z" fill="#FFD700" stroke="#B8860B" strokeWidth="1" />
+                                    <circle cx="50" cy="25" r="5" fill="#B8860B" />
                                 </svg>
                             </div>
                         ))}
