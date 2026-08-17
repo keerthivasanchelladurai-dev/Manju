@@ -113,7 +113,7 @@
   .super-body .pop-card-footer { font-size: 14px; }
 }
 
-@media (max-height: 500px) {
+@media (max-height: 600px) and (orientation: landscape), (max-height: 500px) {
   .super-body #mario-ui { font-size: 12px; padding: 10px 15px; }
   .super-body .pop-card { padding: 12px; width: 140px; }
   .super-body .pop-card .image-placeholder { height: 90px; }

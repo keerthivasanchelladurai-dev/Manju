@@ -13,9 +13,9 @@ const Santa = () => {
   const santaRef = useRef(null);
 
   useEffect(() => {
-    // Generate stars
+    // Generate stars (reduced count for better performance)
     const newStars = [];
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 75; i++) {
       const size = Math.random() * 3 + 1;
       newStars.push({
         id: i,
@@ -31,29 +31,40 @@ const Santa = () => {
 
     // Animation physics
     let santaX = -300;
-    const santaSpeed = 7.0;
+    const baseSantaSpeed = 0.42; // pixels per ms (approx 7px per 16.6ms)
     const santaY = window.innerHeight * 0.10;
     
     let giftDropped = false;
     let giftFalling = false;
-    let localGiftLanded = false;
     let giftY = 0;
     let giftVY = 0;
-    const giftGravity = 0.15;
+    const baseGiftGravity = 0.009; // per ms
     const groundY = window.innerHeight * 0.78;
 
-    let santaAnimationFrame;
-    let giftAnimationFrame;
+    let animationFrame;
+    let lastTime = performance.now();
 
     if (santaRef.current) {
-      santaRef.current.style.top = `${santaY}px`;
-      santaRef.current.style.left = `${santaX}px`;
+      santaRef.current.style.top = '0px';
+      santaRef.current.style.left = '0px';
+      santaRef.current.style.transform = `translate3d(${santaX}px, ${santaY}px, 0)`;
     }
 
-    const animateSanta = () => {
-      santaX += santaSpeed;
-      if (santaRef.current) {
-        santaRef.current.style.left = `${santaX}px`;
+    const animate = (time) => {
+      const deltaTime = time - lastTime;
+      lastTime = time;
+      
+      // Cap deltaTime to prevent huge jumps if tab is inactive
+      const dt = Math.min(deltaTime, 50);
+
+      // Animate Santa
+      if (santaX < window.innerWidth + 350) {
+        santaX += baseSantaSpeed * dt;
+        if (santaRef.current) {
+          santaRef.current.style.transform = `translate3d(${santaX}px, ${santaY}px, 0)`;
+        }
+      } else if (santaRef.current && santaRef.current.style.display !== 'none') {
+        santaRef.current.style.display = 'none';
       }
 
       // Drop gift when santa is at the center
@@ -67,24 +78,16 @@ const Santa = () => {
         giftFalling = true;
       }
 
-      if (santaX < window.innerWidth + 350) {
-        santaAnimationFrame = requestAnimationFrame(animateSanta);
-      } else if (santaRef.current) {
-        santaRef.current.style.display = 'none';
-      }
-    };
-
-    const animateGift = () => {
+      // Animate Gift
       if (giftFalling) {
-        giftVY += giftGravity;
-        giftY += giftVY;
+        giftVY += baseGiftGravity * dt;
+        giftY += giftVY * dt;
 
         if (giftY >= groundY) {
           giftY = groundY;
           giftVY = -giftVY * 0.4; // damp bounce
-          if (Math.abs(giftVY) < 0.5) {
+          if (Math.abs(giftVY) < 0.05) { // Stop bouncing threshold
             giftFalling = false;
-            localGiftLanded = true;
             setGiftLanded(true);
             giftVY = 0;
           }
@@ -94,15 +97,17 @@ const Santa = () => {
           giftRef.current.style.top = `${giftY}px`;
         }
       }
-      giftAnimationFrame = requestAnimationFrame(animateGift);
+
+      // Continue loop if Santa is still on screen or gift is still falling
+      if (santaX < window.innerWidth + 350 || giftFalling) {
+        animationFrame = requestAnimationFrame(animate);
+      }
     };
 
-    santaAnimationFrame = requestAnimationFrame(animateSanta);
-    giftAnimationFrame = requestAnimationFrame(animateGift);
+    animationFrame = requestAnimationFrame(animate);
 
     return () => {
-      if (santaAnimationFrame) cancelAnimationFrame(santaAnimationFrame);
-      if (giftAnimationFrame) cancelAnimationFrame(giftAnimationFrame);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
     };
   }, []);
 

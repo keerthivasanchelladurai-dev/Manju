@@ -108,6 +108,25 @@ const Last = () => {
                 </div>
 
                 <div className="signature">- Yours always ❤️</div>
+
+                <div className="photo-gallery">
+                    <div className="polaroid">
+                        <div className="tape"></div>
+                        <div className="photo-placeholder">Add Photo</div>
+                    </div>
+                    <div className="polaroid">
+                        <div className="tape"></div>
+                        <div className="photo-placeholder">Add Photo</div>
+                    </div>
+                    <div className="polaroid">
+                        <div className="tape"></div>
+                        <div className="photo-placeholder">Add Photo</div>
+                    </div>
+                    <div className="polaroid">
+                        <div className="tape"></div>
+                        <div className="photo-placeholder">Add Photo</div>
+                    </div>
+                </div>
                 
                 <div className="close-section">
                     <p className="close-text">If you have completed reading, you can leave. The page will close automatically.</p>

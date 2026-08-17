@@ -16,6 +16,7 @@ const Port = () => {
     const navigate = useNavigate();
     const [finalFlash, setFinalFlash] = useState(false);
     const [crossfade, setCrossfade] = useState(false);
+    const [showUniverseText, setShowUniverseText] = useState(false);
 
     useEffect(() => {
         let animId;
@@ -436,6 +437,11 @@ const Port = () => {
 
             textEl.style.opacity = 0;
             labelEl.style.opacity = 0;
+
+            await new Promise(r => setTimeout(r, 1000));
+            if (isComponentMounted) {
+                setShowUniverseText(true);
+            }
         };
         playDialogs();
 
@@ -463,10 +469,13 @@ const Port = () => {
             <div className={`port-flash ${finalFlash ? 'final-flash' : ''}`}></div>
 
             {!finalFlash && (
-                <div id="dialog-container">
-                    <div id="dialog-text"></div>
-                    <div id="dialog-label"></div>
-                </div>
+                <>
+                    {showUniverseText && <div className="universe-text">the universe also waiting to say this</div>}
+                    <div id="dialog-container">
+                        <div id="dialog-text"></div>
+                        <div id="dialog-label"></div>
+                    </div>
+                </>
             )}
         </div>
     );

@@ -91,6 +91,28 @@
   transition: opacity 1s ease-in-out;
 }
 
+.universe-text {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.8rem;
+  color: #ffdf99;
+  text-shadow: 0 0 15px rgba(255, 223, 153, 0.6);
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  animation: slowFadeInOut 8s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+@keyframes slowFadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.8; }
+}
+
 @media (max-width: 768px) {
   #dialog-text {
     font-size: 1.6rem;
@@ -98,5 +120,26 @@
   #dialog-label {
     font-size: 0.9rem;
     letter-spacing: 2px;
+  }
+  .universe-text {
+    font-size: 1.2rem;
+    top: 10%;
+    white-space: normal;
+    text-align: center;
+    width: 90%;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  #dialog-text {
+    font-size: 1.8rem;
+  }
+  #dialog-label {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+  }
+  .universe-text {
+    font-size: 1.2rem;
+    top: 8%;
   }
 }

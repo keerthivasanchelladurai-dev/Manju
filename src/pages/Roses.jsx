@@ -3,6 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import Matter from 'matter-js';
 import './Roses.css';
 
+const Typewriter = ({ text, show, speed = 50 }) => {
+    const [displayedText, setDisplayedText] = useState("");
+
+    useEffect(() => {
+        if (!show) return;
+
+        setDisplayedText("");
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < text.length) {
+                setDisplayedText(text.substring(0, i + 1));
+                i++;
+            } else {
+                clearInterval(interval);
+            }
+        }, speed);
+
+        return () => clearInterval(interval);
+    }, [text, show, speed]);
+
+    return <span>{displayedText}<span className="cursor">|</span></span>;
+};
+
 const Roses = () => {
     const containerRef = useRef(null);
     const navigate = useNavigate();
@@ -10,6 +33,7 @@ const Roses = () => {
     const [messageText, setMessageText] = useState("You don’t know me. I don’t know you. Yet this found its way to you.");
     const [isOpened, setIsOpened] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
+    const [showButton, setShowButton] = useState(false);
 
     useEffect(() => {
         const Engine = Matter.Engine,
@@ -21,7 +45,7 @@ const Roses = () => {
             MouseConstraint = Matter.MouseConstraint;
 
         const engine = Engine.create();
-        
+
         const render = Render.create({
             element: containerRef.current,
             engine: engine,
@@ -44,20 +68,21 @@ const Roses = () => {
         const roseTextures = ['/images/rose1.png', '/images/rose2.png', '/images/rose3.png'];
 
         let roseCount = 0;
-        const maxRoses = 200;
+        const isMobile = window.innerWidth <= 768;
+        const maxRoses = isMobile ? 100 : 200;
         let isOpening = false;
-        let effectTimeout, navTimeout, spawnInterval;
+        let effectTimeout, buttonTimeout, spawnInterval;
 
         function createRose() {
             if (roseCount >= maxRoses) {
                 if (!isOpening) {
                     isOpening = true;
-                    effectTimeout = setTimeout(openScreenEffect, 2000);
+                    effectTimeout = setTimeout(openScreenEffect, isMobile ? 1000 : 2000);
                 }
                 return;
             }
 
-            const radius = 45 + Math.random() * 25;
+            const radius = isMobile ? (25 + Math.random() * 15) : (45 + Math.random() * 25);
             const x = Math.random() * window.innerWidth;
             const y = -100 - Math.random() * 100;
 
@@ -109,24 +134,21 @@ const Roses = () => {
                     setTimeout(() => {
                         setMessageText("Why these words? Why today? Keep watching. The answer is close.");
                         setShowMessage(true);
-                        navTimeout = setTimeout(() => {
-                            setIsFadingOut(true);
-                            setTimeout(() => {
-                                navigate('/fix');
-                            }, 2000);
-                        }, 5000);
+                        buttonTimeout = setTimeout(() => {
+                            setShowButton(true);
+                        }, 4000);
                     }, 1000);
-                }, 4500);
+                }, 5500);
             }, 1000);
         }
 
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < (isMobile ? 10 : 20); i++) {
             setTimeout(createRose, i * 10);
         }
 
         spawnInterval = setInterval(() => {
             createRose();
-        }, 150);
+        }, isMobile ? 80 : 150);
 
         const mouse = Mouse.create(render.canvas);
         const mouseConstraint = MouseConstraint.create(engine, {
@@ -159,7 +181,7 @@ const Roses = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
             clearTimeout(effectTimeout);
-            clearTimeout(navTimeout);
+            clearTimeout(buttonTimeout);
             clearInterval(spawnInterval);
             Render.stop(render);
             Runner.stop(runner);
@@ -173,7 +195,22 @@ const Roses = () => {
     return (
         <div className={`roses-body ${isOpened ? 'opened' : ''} ${isFadingOut ? 'fade-out' : ''}`}>
             <div id="canvas-container" ref={containerRef}></div>
-            <div id="message" className={showMessage ? 'show' : ''}>{messageText}</div>
+            <div id="message" className={showMessage ? 'show' : ''}>
+                <Typewriter text={messageText} show={showMessage} speed={50} />
+            </div>
+            {showButton && (
+                <button
+                    className="watch-btn"
+                    onClick={() => {
+                        setShowButton(false);
+                        setShowMessage(false);
+                        setIsFadingOut(true);
+                        setTimeout(() => navigate('/fix'), 2000);
+                    }}
+                >
+                    hey watch care fully!
+                </button>
+            )}
         </div>
     );
 };

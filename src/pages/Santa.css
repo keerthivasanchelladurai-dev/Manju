@@ -16,6 +16,7 @@
   background-color: white;
   border-radius: 50%;
   animation: twinkle infinite alternate;
+  will-change: opacity, transform;
 }
 @keyframes twinkle {
   0% { opacity: 0.2; transform: scale(0.8); }
@@ -56,6 +57,7 @@
   height: auto;
   filter: drop-shadow(3px 6px 10px rgba(0, 0, 0, 0.4));
   pointer-events: none;
+  will-change: transform;
 }
 
 /* === GIFT BOX (2D SVG) === */
@@ -69,7 +71,8 @@
   cursor: pointer;
   opacity: 0;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, top, opacity;
 }
 #gift:hover {
   transform: scale(1.15);

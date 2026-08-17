@@ -86,10 +86,10 @@
   #name-text { font-size: 3.5rem; margin-bottom: 15vh; }
 }
 
-@media (max-height: 500px) {
-  #ui-layer { padding: 10px 0; }
-  #hb-text { font-size: 2rem; margin-top: 10px; }
-  #name-text { font-size: 2.5rem; margin-bottom: 10px; }
+@media (max-height: 600px) and (orientation: landscape), (max-height: 500px) {
+  #ui-layer { padding: 5px 0; }
+  #hb-text { font-size: 2rem; margin-top: 5px; }
+  #name-text { font-size: 2.5rem; margin-bottom: 5px; }
 }
 
 #carousel-container {
@@ -160,7 +160,7 @@
   .play-super-btn { padding: 12px 30px; font-size: 1.2rem; }
 }
 
-@media (max-height: 500px) {
+@media (max-height: 600px) and (orientation: landscape), (max-height: 500px) {
   #carousel-container { width: 100vw; height: 100vh; top: 0; left: 0; align-items: center; justify-content: center; background: rgba(255,255,255,0.7); }
   .play-message-text { font-size: 1.5rem; }
   .play-super-btn { padding: 10px 25px; font-size: 1.1rem; }
@@ -406,4 +406,14 @@
   .premium-lock img.heart-lock { width: 90px; }
   .premium-lock .tap-text { font-size: 1.8rem; }
   .lock-screen > p:first-child { font-size: 15px !important; margin-bottom: 10px !important; max-width: 90%; }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .dial-btn { width: 45px; height: 45px; font-size: 1rem; }
+  .dialpad-grid { gap: 10px; }
+  .passkey-title { font-size: 1.5rem; margin: 0; }
+  .premium-lock img.heart-lock { width: 60px; }
+  .premium-lock .tap-text { font-size: 1.3rem; }
+  .lock-screen > p:first-child { font-size: 13px !important; margin-bottom: 5px !important; }
+  .dialpad-screen { gap: 15px; }
 }

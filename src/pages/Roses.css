@@ -33,15 +33,15 @@
 
 .roses-body #message {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0);
+    transform: translate(-50%, -50%);
     font-size: 5rem;
     font-weight: bold;
-    color: #db2777;
+    color: #800020; /* Burgundy */
     z-index: 20;
     opacity: 0;
-    transition: all 2s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
     text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
     text-align: center;
     pointer-events: none;
@@ -50,7 +50,51 @@
 
 .roses-body #message.show {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Typing cursor animation */
+.cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background-color: #800020;
+    vertical-align: text-bottom;
+    margin-left: 4px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.watch-btn {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #800020, #4a0010); /* Burgundy gradient */
+    color: white;
+    padding: 15px 35px;
+    font-size: 1.5rem;
+    font-family: 'Georgia', serif;
+    border: 2px solid #ffcdd2;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 30;
+    opacity: 0;
+    animation: fadeInBtn 1.5s ease forwards;
+    box-shadow: 0 8px 25px rgba(128, 0, 32, 0.4);
+    transition: all 0.3s ease;
+}
+
+.watch-btn:hover {
+    transform: translate(-50%, -55%) scale(1.05);
+    box-shadow: 0 12px 30px rgba(128, 0, 32, 0.6);
+}
+
+@keyframes fadeInBtn {
+    to { opacity: 1; }
 }
 
 @media (max-width: 768px) {
@@ -58,5 +102,24 @@
         font-size: 2.2rem;
         width: 90%;
         line-height: 1.4;
+    }
+    .watch-btn {
+        font-size: 1.2rem;
+        padding: 12px 28px;
+        width: 80%;
+        text-align: center;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .roses-body #message {
+        font-size: 2rem;
+        width: 90%;
+        line-height: 1.4;
+    }
+    .watch-btn {
+        top: 85%;
+        padding: 10px 24px;
+        font-size: 1.2rem;
     }
 }
