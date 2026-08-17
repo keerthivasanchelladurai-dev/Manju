@@ -6,6 +6,11 @@
   overflow: hidden;
   font-family: 'Montserrat', sans-serif;
   touch-action: none;
+  transition: opacity 2.5s ease-in-out;
+}
+
+.fix-body.fade-out {
+  opacity: 0;
 }
 
 /* === HAND SEQUENCE === */

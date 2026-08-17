@@ -1,0 +1,177 @@
+.cake-body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
+  position: relative;
+  background: radial-gradient(circle at 80% 50%, #fef3e3 0%, #ecd6b7 100%);
+}
+
+.cake-body * {
+  box-sizing: border-box;
+}
+
+#cake-scene {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 5vw;
+  box-sizing: border-box;
+  z-index: 100;
+  opacity: 1;
+}
+
+#leftPanel {
+  position: absolute;
+  left: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+}
+
+#leftPanel.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.quote {
+  font-size: 3.5rem;
+  color: #d64984;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 15px;
+  position: relative;
+  text-shadow: 2px 2px 0px #fff, 0 5px 15px rgba(214, 73, 132, 0.3);
+}
+
+.sub-quote {
+  font-size: 1.4rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 24px;
+  animation: twinkle 1s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+.s1 { top: -20px; left: -30px; animation-delay: 0.1s; font-size: 30px; }
+.s2 { top: 60px; right: -40px; animation-delay: 0.5s; font-size: 40px; }
+.s3 { bottom: -20px; left: 40%; animation-delay: 0.8s; font-size: 25px; }
+
+@keyframes twinkle {
+  0% { transform: scale(0.5) rotate(0deg); opacity: 0.4; filter: drop-shadow(0 0 2px #ffd700); }
+  100% { transform: scale(1.2) rotate(20deg); opacity: 1; filter: drop-shadow(0 0 15px #ffd700); }
+}
+
+.ready-btn {
+  background: linear-gradient(135deg, #ff7eb6, #d64984);
+  color: #fff;
+  border: none;
+  padding: 15px 35px;
+  font-size: 1.3rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(214, 73, 132, 0.4);
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+}
+
+.ready-btn.visible {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.ready-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(214, 73, 132, 0.6);
+}
+
+#cakeContainer {
+  position: relative;
+}
+
+#cakeContainer canvas {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0 15px 10px rgba(0, 0, 0, 0.2));
+  transform-origin: center;
+  opacity: 0;
+}
+
+.throw-in {
+  animation-name: throwAndBounce;
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  animation-fill-mode: both;
+}
+
+#layer-plate.throw-in { animation-delay: 0.2s; z-index: 1; }
+#layer-bottom.throw-in { animation-delay: 0.9s; z-index: 2; }
+#layer-middle.throw-in { animation-delay: 1.6s; z-index: 3; }
+#layer-top.throw-in { animation-delay: 2.3s; z-index: 4; }
+#layer-candle.throw-in { animation-delay: 3.0s; z-index: 5; }
+
+@keyframes throwAndBounce {
+  0% { transform: translate(-80vw, -60vh) rotate(-45deg) scale(0.6); opacity: 0; }
+  45% { transform: translate(0, 0) rotate(8deg) scale(1.05); opacity: 1; }
+  65% { transform: translate(0, -40px) rotate(-4deg) scale(0.98); }
+  80% { transform: translate(0, 0) rotate(2deg) scale(1.02); }
+  90% { transform: translate(0, -10px) rotate(-1deg) scale(0.99); }
+  100% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+}
+
+@media (max-width: 800px) and (orientation: portrait), (max-width: 500px) {
+  #cake-scene {
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 0;
+  }
+  #leftPanel {
+      position: relative;
+      left: 0;
+      top: 0;
+      transform: none;
+      width: 90%;
+      text-align: center;
+      align-items: center;
+      margin-top: -50px;
+      z-index: 20;
+  }
+  .quote { font-size: 2.5rem; }
+  #cakeContainer { margin-top: 50px; }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  #cake-scene { padding: 0 2vw; }
+  #leftPanel { left: 5%; width: 50%; }
+  .quote { font-size: 2rem; margin-bottom: 10px; }
+  .sub-quote { font-size: 1rem; margin-bottom: 15px; }
+  .ready-btn { padding: 10px 20px; font-size: 1rem; }
+}

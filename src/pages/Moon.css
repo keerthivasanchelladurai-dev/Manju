@@ -96,7 +96,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 50vw;
+  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -115,24 +115,7 @@
 }
 
 .gift-boxes-wrapper {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-}
-
-.moon-gift-box {
-  width: 100px;
-  height: 100px;
-  cursor: pointer;
-  filter: drop-shadow(0 4px 15px rgba(255, 215, 0, 0.4));
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.moon-gift-box:hover {
-  transform: scale(1.15) translateY(-10px);
-  filter: drop-shadow(0 8px 25px rgba(255, 215, 0, 0.7));
+  display: none;
 }
 
 .play-message-wrapper {
@@ -144,10 +127,10 @@
 }
 
 .play-message-text {
-  color: #fff;
+  color: #111;
   font-size: 2.5rem;
   font-style: italic;
-  text-shadow: 0 4px 15px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin: 0;
 }
 
@@ -173,16 +156,245 @@
 
 @media (max-width: 768px) {
   #carousel-container { width: 100vw; height: 50vh; top: auto; bottom: 0; }
-  .gift-boxes-wrapper { gap: 15px; }
-  .moon-gift-box { width: 70px; height: 70px; }
   .play-message-text { font-size: 1.8rem; }
   .play-super-btn { padding: 12px 30px; font-size: 1.2rem; }
 }
 
 @media (max-height: 500px) {
-  #carousel-container { width: 100vw; height: 100vh; top: 0; left: 0; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); }
-  .gift-boxes-wrapper { gap: 20px; }
-  .moon-gift-box { width: 60px; height: 60px; }
+  #carousel-container { width: 100vw; height: 100vh; top: 0; left: 0; align-items: center; justify-content: center; background: rgba(255,255,255,0.7); }
   .play-message-text { font-size: 1.5rem; }
   .play-super-btn { padding: 10px 25px; font-size: 1.1rem; }
+}
+
+/* UI Container for Lock & Dialpad */
+.ui-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  transition: opacity 1s ease-in-out, transform 0.5s ease;
+  pointer-events: none;
+}
+
+.ui-overlay.active {
+  pointer-events: auto;
+}
+
+.ui-overlay.hidden {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+/* Lock Screen */
+.lock-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  cursor: pointer;
+  transition: transform 0.3s, opacity 0.5s;
+}
+
+.lock-screen:hover {
+  transform: scale(1.05);
+}
+
+.lock-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.heart-lock {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+}
+
+.tap-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #7b6255;
+  margin: 0;
+}
+
+/* Dialpad Screen */
+.dialpad-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.dialpad-screen.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dialpad-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.small-lock {
+  width: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.passkey-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5rem;
+  color: #a02828;
+  margin: 0;
+}
+
+.passkey-dots {
+  display: flex;
+  gap: 15px;
+}
+
+.dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid #7b6255;
+  transition: background-color 0.2s;
+}
+
+.dot.filled {
+  background-color: #7b6255;
+}
+
+.dot.error {
+  border-color: #ff4757;
+  background-color: #ff4757;
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+.dialpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.dial-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  border: none;
+  font-size: 1.5rem;
+  font-family: 'Playfair Display', serif;
+  color: #2c4433;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+  transition: background 0.2s, transform 0.1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dial-btn:active {
+  background: rgba(255,255,255,0.9);
+  transform: scale(0.95);
+}
+
+.dial-btn.empty {
+  visibility: hidden;
+}
+
+/* Premium Wedding Card Aesthetic Classes */
+.premium-lock .tap-text {
+  color: #800000;
+  text-shadow: 0 2px 5px rgba(128, 0, 0, 0.15);
+  font-size: 2.2rem;
+}
+
+.premium-lock img.heart-lock {
+  filter: drop-shadow(0 15px 25px rgba(128, 0, 0, 0.2));
+  border: 2px solid #D4AF37;
+  border-radius: 50%;
+  padding: 10px;
+  background: rgba(253, 251, 247, 0.5);
+}
+
+.premium-dialpad .passkey-title {
+  color: #800000;
+  text-shadow: 0 1px 5px rgba(128, 0, 0, 0.05);
+}
+
+.premium-dialpad .small-lock {
+  background: rgba(253, 251, 247, 0.8);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid #D4AF37;
+}
+
+.premium-dot {
+  border-color: #D4AF37 !important;
+  background-color: transparent !important;
+  box-shadow: inset 0 0 5px rgba(212, 175, 55, 0.1);
+}
+
+.premium-dot.filled {
+  background-color: #D4AF37 !important;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.premium-btn {
+  background: rgba(253, 251, 247, 0.6) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid #D4AF37 !important;
+  color: #800000 !important;
+  font-weight: 500;
+  box-shadow: 0 4px 15px 0 rgba(128, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.premium-btn:hover {
+  background: rgba(253, 251, 247, 0.9) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px 0 rgba(128, 0, 0, 0.1) !important;
+}
+
+.premium-btn:active {
+  transform: translateY(1px);
+}
+
+.premium-super-btn {
+  background: linear-gradient(135deg, #800000, #5a0000) !important;
+  color: #FDFBF7 !important;
+  border: 2px solid #D4AF37 !important;
+  box-shadow: 0 10px 30px rgba(128, 0, 0, 0.3) !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase;
+  font-family: 'Playfair Display', serif !important;
+}
+
+.premium-super-btn:hover {
+  box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3) !important;
+  transform: translateY(-5px) scale(1.05) !important;
 }

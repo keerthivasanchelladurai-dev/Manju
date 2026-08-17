@@ -4,8 +4,11 @@ import Index from './pages/Index'
 import Intro from './pages/Intro'
 import Game from './pages/Game'
 import Santa from './pages/Santa'
+import Roses from './pages/Roses'
 import Fix from './pages/Fix'
+import Port from './pages/Port'
 import Moon from './pages/Moon'
+import Cake from './pages/Cake'
 import Super from './pages/Super'
 import Last from './pages/Last'
 
@@ -65,13 +68,14 @@ function App() {
     <Router>
       <GlobalAudio />
       <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/intro" element={<Intro />} />
+        <Route path="/" element={<Game />} />
         <Route path="/game" element={<Game />} />
         <Route path="/santa" element={<Santa />} />
+        <Route path="/roses" element={<Roses />} />
         <Route path="/fix" element={<Fix />} />
+        <Route path="/port" element={<Port />} />
         <Route path="/moon" element={<Moon />} />
-        <Route path="/super" element={<Super />} />
+        <Route path="/cake" element={<Cake />} />
         <Route path="/last" element={<Last />} />
       </Routes>
     </Router>

@@ -120,7 +120,7 @@ const Santa = () => {
       setOverlayVisible(false);
       setWhiteScreenVisible(true);
       setTimeout(() => {
-        navigate('/fix');
+        navigate('/roses');
       }, 1600);
     }
   };
