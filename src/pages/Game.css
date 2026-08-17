@@ -256,7 +256,7 @@
   #bow-container { width: 110px; height: 110px; left: 10%; bottom: 15%; }
   #bow { width: 95px; height: 95px; }
   
-  .happy-bday { font-size: 50px; }
+  .happy-bday { font-size: 24px !important; }
   .wish-text { font-size: 16px; }
 }
 

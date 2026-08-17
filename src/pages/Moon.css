@@ -398,3 +398,12 @@
   box-shadow: 0 15px 40px rgba(212, 175, 55, 0.3) !important;
   transform: translateY(-5px) scale(1.05) !important;
 }
+
+@media (max-width: 768px) {
+  .dial-btn { width: 60px; height: 60px; font-size: 1.2rem; }
+  .dialpad-grid { gap: 15px; }
+  .passkey-title { font-size: 2rem; }
+  .premium-lock img.heart-lock { width: 90px; }
+  .premium-lock .tap-text { font-size: 1.8rem; }
+  .lock-screen > p:first-child { font-size: 15px !important; margin-bottom: 10px !important; max-width: 90%; }
+}

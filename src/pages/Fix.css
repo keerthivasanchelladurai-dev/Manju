@@ -173,4 +173,8 @@
   .hud-right { right: 5%; transform: translateY(-50%) perspective(400px) rotateY(-5deg); }
   #port-message { font-size: 2.2rem; white-space: normal; }
   #port-label { font-size: 0.7rem; letter-spacing: 2px; }
+  
+  .choice-text { font-size: 1.4rem; max-width: 95%; }
+  .choice-btn { padding: 12px 24px; font-size: 1rem; }
+  #leave-msg .choice-text { font-size: 1.2rem; }
 }

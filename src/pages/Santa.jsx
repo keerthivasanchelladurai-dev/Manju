@@ -31,7 +31,7 @@ const Santa = () => {
 
     // Animation physics
     let santaX = -300;
-    const santaSpeed = 2.5;
+    const santaSpeed = 7.0;
     const santaY = window.innerHeight * 0.10;
     
     let giftDropped = false;

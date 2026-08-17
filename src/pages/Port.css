@@ -93,9 +93,10 @@
 
 @media (max-width: 768px) {
   #dialog-text {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
   #dialog-label {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
   }
 }

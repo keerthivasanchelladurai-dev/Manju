@@ -52,3 +52,11 @@
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
+
+@media (max-width: 768px) {
+    .roses-body #message {
+        font-size: 2.2rem;
+        width: 90%;
+        line-height: 1.4;
+    }
+}
